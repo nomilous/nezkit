@@ -80,7 +80,7 @@ module.exports = set =
         #
         # callback resursion
         # 
-        # each call to target[functionName] will 
+        # each call to target[action] will 
         # make this callback....
         #
 
@@ -95,7 +95,7 @@ module.exports = set =
 
             if error
 
-                afterEach error, results
+                afterAll error, results
                 return
 
             results.push result
