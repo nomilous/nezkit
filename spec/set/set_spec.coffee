@@ -53,11 +53,13 @@ require('nez').realize 'Set', (Set, test, context, should) ->
 
                 aSetOfThings.push new (
 
-                    class Thing
+                    class SomeKindOfThing
 
                         constructor: (@seq) -> 
 
-                        action: (arg1, arg2, callback) ->
+                        action: (arg1, arg2, arg3, callback) ->
+
+                            arg3.push @seq * arg2
 
                             callback null, "#{@constructor.name} with #{@seq * arg1 * arg2}"
 
@@ -65,23 +67,48 @@ require('nez').realize 'Set', (Set, test, context, should) ->
 
 
             eachCalledCount = 0
+            anotherResultVector = []
 
             Set.series
 
                 targets: aSetOfThings
 
-                args: [2, 0.5]
+                args: [2, 0.5, anotherResultVector]
 
                 afterEach: (errir, result) -> 
 
-                    result.should.equal "Thing with #{eachCalledCount++}"
+                    result.should.equal "SomeKindOfThing with #{eachCalledCount++}"
 
                 function: 'action', (error, result) ->
 
-                    result[result.length - 1].should.equal 'Thing with 499'
+                    result[result.length - 1].should.equal 'SomeKindOfThing with 499'
                     eachCalledCount.should.equal 500
+                    anotherResultVector[499].should.equal 499 / 2
                     test done
 
 
 
-        it 'calls back with the original calling context'
+        it 'calls back with the original calling context', (done) ->
+
+            @callbackContext = 'this'
+
+            Set.series
+
+                targets: [
+
+                    { doSomething: (callback) -> callback null, 'ONE' }
+                    { doSomething: (callback) -> callback null, 'TWO' }
+                    new (
+                        class Thing 
+                            doSomething: (cb) -> 
+                                cb null, 'THING__3'
+                    )()
+
+                ]
+
+                function: 'doSomething', (err, res) ->
+
+                    res.should.eql ['ONE', 'TWO', 'THING__3']
+                    @callbackContext.should.equal 'this'
+
+
