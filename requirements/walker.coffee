@@ -1,1 +1,0 @@
-# hyperedge walkers, tree and graph
