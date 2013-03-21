@@ -41,4 +41,3 @@ module.exports = kit =
 
     injector: require './injector/injector'
 
-

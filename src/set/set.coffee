@@ -1,22 +1,25 @@
 module.exports = set = 
 
-    series: (targetsArray, functionName, args, finalCallback, stepCallback) ->
+    # series: (targetsArray, functionName, args, finalCallback, stepCallback) ->
 
-        #
-        # Where each in targetsArray implements functionName 
-        # that accepts an (err, result) callback in addition
-        # to the provided args.
-        # 
-        # Each callback from the targets will accumulate 
-        # into a results array which is sent to the finalCallback
-        # 
-        # If any of the targets callback an error, the series
-        # will terminate and the error will be sent to the
-        # finalCallback along with the partial results array.
-        #  
-        # If defined, stepCallback will be called with each
-        # individual result as it ocurrs.
-        # 
+    series: (opts = {}, callback) -> 
+
+        for required in ['targets', 'function', 'args']
+
+            if typeof opts[required] == 'undefined'
+
+                throw new Error "missing opts.#{required} in set.series(opts, cb)"
+
+
+        for arrays in ['targets', 'args']
+
+            unless opts[arrays] instanceof Array
+
+                throw new Error "opts.targets should be array"
+
+
+
+        return
 
         #
         # shallow clone targetsArray, 
