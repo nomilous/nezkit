@@ -112,3 +112,9 @@ require('nez').realize 'Set', (Set, test, context, should) ->
                     @callbackContext.should.equal 'this'
 
 
+
+        it 'can optionally be configured to traverse the series in reverse'
+        it 'will default to terminating the series on error an populate the error into the callback'
+        it 'can optionally be configured complete the series and populate all the errors into the callback as an array'
+
+
