@@ -21,6 +21,14 @@ module.exports = kit =
     npm: require './npm/npm'
 
 
+
+    #
+    # for interactions with the coffee script compiler
+    #
+
+    coffee: require './coffee/coffee'
+
+
     #
     # for interactions with a set of `objects`
     #
