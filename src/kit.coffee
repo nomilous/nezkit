@@ -15,6 +15,13 @@ module.exports = kit =
 
 
     #
+    # for interactions with npm
+    #
+
+    npm: require './npm/npm'
+
+
+    #
     # for interactions with a set of `objects`
     #
 

@@ -5,13 +5,14 @@ require('nez').realize 'Kit', (Kit, test, it, should) ->
         should.exist Kit
         test done
 
-    it 'exports git', (done) ->
 
-        Kit.git.should.equal require '../lib/git/git'
-        test done
+    for toolset in ['shell', 'git', 'npm', 'set']
 
-    it 'exports shell', (done) ->
+        #
+        # a possibly inappropriate approach to testing?
+        #
 
-        Kit.shell.should.equal require '../lib/shell/shell'
-        test done
+        it "exports #{toolset}", (done) ->
 
+            Kit[toolset].should.equal require "../lib/#{toolset}/#{toolset}"
+            test done
