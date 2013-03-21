@@ -27,7 +27,7 @@ require('nez').realize 'Set', (Set, test, context, should) ->
                 error.should.match /opts\.targets should be array/
                 test done
 
-        it 'requires a callback as arg1', (done) -> 
+        it 'requires a callback as arg2', (done) -> 
 
             try
 
@@ -44,6 +44,44 @@ require('nez').realize 'Set', (Set, test, context, should) ->
                 test done
 
 
-        it 'calls back afterEach and afterAll'
+        it 'calls back afterEach and afterAll', (done) -> 
+
+            seq = 0
+            aSetOfThings = [] 
+
+            for num in [1..500]
+
+                aSetOfThings.push new (
+
+                    class Thing
+
+                        constructor: (@seq) -> 
+
+                        action: (arg1, arg2, callback) ->
+
+                            callback null, "#{@constructor.name} with #{@seq * arg1 * arg2}"
+
+                )( seq++ )
+
+
+            eachCalledCount = 0
+
+            Set.series
+
+                targets: aSetOfThings
+
+                args: [2, 0.5]
+
+                afterEach: (errir, result) -> 
+
+                    result.should.equal "Thing with #{eachCalledCount++}"
+
+                function: 'action', (error, result) ->
+
+                    result[result.length - 1].should.equal 'Thing with 499'
+                    eachCalledCount.should.equal 500
+                    test done
+
+
 
         it 'calls back with the original calling context'

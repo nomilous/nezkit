@@ -58,11 +58,9 @@ module.exports = set =
             throw new Error "undefined callback in set.series(opts callback)"
 
 
-        return
-
-
-        targets   = []
         results   = []
+        targets   = []
+        action    = opts.function 
         args      = opts.args || []
         afterEach = opts.afterEach || ->
         afterAll  = callback
@@ -93,28 +91,26 @@ module.exports = set =
             #     or goes to finalCallback on error
             #
 
-            if typeof stepCallback == 'function'
-
-                stepCallback error, result
+            afterEach error, result
 
             if error
 
-                finalCallback error, results
+                afterEach error, results
                 return
 
             results.push result
 
-            set.recurse results, targets, functionName, args, finalCallback
+            set.recurse results, targets, action, args, afterAll
 
 
         #
         # start the recursion
         #
 
-        set.recurse results, targets, functionName, args, finalCallback
+        set.recurse results, targets, action, args, afterAll
 
 
-    recurse: (results, targets, fname, args, finalCallback) -> 
+    recurse: (results, targets, action, args, afterAll) -> 
 
         #
         # shift next from targets 
@@ -125,9 +121,9 @@ module.exports = set =
         target = targets.shift() 
         unless target
 
-            finalCallback null, results
+            afterAll null, results
             return
 
 
-        target[fname].apply target, args
+        target[action].apply target, args
 
