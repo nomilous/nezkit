@@ -1,0 +1,17 @@
+#!/usr/bin/env coffee
+
+require('nez').objective 'Nez',
+
+    nimbal: 'https://localhost:10101/'
+
+    class: 'Root Module'
+
+    classification: 'Tools and Utilities'
+
+    description: """
+
+        Base tools, plugins and utilities for nez.
+
+    """, (requirement) -> 
+
+        requirement.link 'requirements/hyper_edge'
