@@ -57,14 +57,14 @@ module.exports = set =
 
             results.push result
 
-            sync.recurse results, targets, functionName, args, finalCallback
+            set.recurse results, targets, functionName, args, finalCallback
 
 
         #
         # start the recursion
         #
 
-        sync.recurse results, targets, functionName, args, finalCallback
+        set.recurse results, targets, functionName, args, finalCallback
 
 
     recurse: (results, targets, fname, args, finalCallback) -> 
