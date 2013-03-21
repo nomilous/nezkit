@@ -21,7 +21,6 @@ module.exports = kit =
     npm: require './npm/npm'
 
 
-
     #
     # for interactions with the coffee script compiler
     #
@@ -34,5 +33,12 @@ module.exports = kit =
     #
 
     set: require './set/set'
+
+
+    #
+    # for runtime injection
+    #
+
+    injector: require './injector/injector'
 
 
