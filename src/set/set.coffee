@@ -1,38 +1,82 @@
 module.exports = set = 
 
-    # series: (targetsArray, functionName, args, finalCallback, stepCallback) ->
+    
+    #
+    # **function** `set.series( opts, callback )`
+    # 
+    # Runs a specified function on a set of objects in series. 
+    # 
+    # `opts`           - As hash of args to configure the series.
+    # 
+    # `callback        - A standard callback, ie. function(error, result) 
+    #                    to call upon completion of the series (or error)
+    # 
+    #                    The callback result will contain an array composed
+    #                    of each individual result as called back from each
+    #                    of the objects in the series.
+    # 
+    #
+    # *Required opts:*
+    # 
+    # `opts.targets`   - Array of target objects.
+    # 
+    # `opts.function`  - The function to call on each target. This function 
+    #                    is called with the targets scope and should accept 
+    #                    a standard callback as lastarg.
+    # 
+    # *Optional opts:*
+    # 
+    # `opts.args`      - An array of args to pass into in each target.function.
+    #                    The same args array instance is passed to each target.
+    # 
+    # `opts.afterEach` - As a function(error, result), to callback with the 
+    #                    results from each individual target.function.
+    # 
+    # 
+    #
 
     series: (opts = {}, callback) -> 
 
-        for required in ['targets', 'function', 'args']
+        for required in ['targets', 'function']
 
             if typeof opts[required] == 'undefined'
 
-                throw new Error "missing opts.#{required} in set.series(opts, cb)"
+                throw new Error "undefined opts.#{required} in set.series(opts, callback)"
 
 
-        for arrays in ['targets', 'args']
+        for array in ['targets', 'args']
 
-            unless opts[arrays] instanceof Array
+            if opts[array] 
 
-                throw new Error "opts.targets should be array"
+                unless opts[array] instanceof Array
 
+                    throw new Error "opts.#{array} should be array in set.series(opts, callback)"
+
+
+        unless typeof callback == 'function'
+
+            throw new Error "undefined callback in set.series(opts callback)"
 
 
         return
+
+
+        targets   = []
+        results   = []
+        args      = opts.args || []
+        afterEach = opts.afterEach || ->
+        afterAll  = callback
 
         #
         # shallow clone targetsArray, 
         # so's not to shift() the original
         # 
 
-        targets = []
-        results = []
-        args    = [] unless args
-
-        for target in targetsArray
+        for target in opts.targets
 
             targets.push target
+
+
 
 
         #
