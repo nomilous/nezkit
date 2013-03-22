@@ -1,69 +1,77 @@
-module.exports = set = 
+#
+# **function** `set.series( opts, args, callback )`
+# 
+# *Usage*
+# 
+# <pre>
+#
+#   series 
+#
+#
+#       #
+#       # array of objects to action() on
+#       #
+#
+#       targets: [ object1, object2 ] 
+#
+#       afterEach: (err, result) ->
+#
+#           #
+#           # Optional callback to receive the callback
+#           # passed onward from each object.action()
+#           # call in the series
+#           #  
+#           # and passed directlythrough from the
+#           # eachobject after the action()
+#           #
+#
+#
+#       #
+#       # The action/functionName and args to call on each 
+#       # object. Object.functionName should accept an 
+#       # (err, result) callback as lastarg.
+#       #
+#
+#       action: 'functionName', ['arg1', 'arg2'], (error, results) -> 
+#
+#           #
+#           # The final callback receives an array of the results
+#           # accumulated from each object.functionName() call 
+#           # in the series. 
+#           #
+# 
+# </pre>
+# 
 
-    
-    #
-    # **function** `set.series( opts, callback )`
-    # 
-    # Runs a specified function on a set of objects in series. 
-    # 
-    # `opts`           - As hash of args to configure the series.
-    # 
-    # `callback        - A standard callback, ie. function(error, result) 
-    #                    to call upon completion of the series (or error)
-    # 
-    #                    The callback result will contain an array composed
-    #                    of each individual result as called back from each
-    #                    of the objects in the series.
-    # 
-    #
-    # *Required opts:*
-    # 
-    # `opts.targets`   - Array of target objects.
-    # 
-    # `opts.function`  - The function to call on each target. This function 
-    #                    is called with the targets scope and should accept 
-    #                    a standard callback as lastarg.
-    # 
-    # *Optional opts:*
-    # 
-    # `opts.args`      - An array of args to pass into in each target.function.
-    #                    The same args array instance is passed to each target.
-    # 
-    # `opts.afterEach` - As a function(error, result), to callback with the 
-    #                    results from each individual target.function.
-    # 
-    # 
-    #
+set = 
 
-    series: (opts = {}, callback) -> 
+    series : -> 
 
-        for required in ['targets', 'function']
+        opts = arguments[0]
+
+        for required in ['targets', 'action']
 
             if typeof opts[required] == 'undefined'
 
-                throw new Error "undefined opts.#{required} in set.series(opts, callback)"
+                throw new Error "undefined opts.#{required} in set.series(opts, args, callback)"
 
 
-        for array in ['targets', 'args']
+        unless opts.targets instanceof Array
 
-            if opts[array] 
-
-                unless opts[array] instanceof Array
-
-                    throw new Error "opts.#{array} should be array in set.series(opts, callback)"
+            throw new Error "opts.targets should be array in set.series(opts, args, callback)"
 
 
-        unless typeof callback == 'function'
-
-            throw new Error "undefined callback in set.series(opts callback)"
-
-
-        results   = []
+        action    = opts.action
         targets   = []
-        action    = opts.function 
-        args      = opts.args || []
+        results   = []
         afterEach = opts.afterEach || ->
-        afterAll  = callback
+        args      = if arguments[1] instanceof Function then [] else arguments[1]
+        afterAll  = arguments[2] || arguments[1]
+
+        unless afterAll instanceof Function
+
+            throw new Error "undefined callback in set.series(opts, args, callback)"
+
 
         #
         # shallow clone targetsArray, 
@@ -127,3 +135,5 @@ module.exports = set =
 
         target[action].apply target, args
 
+
+module.exports = series: set.series

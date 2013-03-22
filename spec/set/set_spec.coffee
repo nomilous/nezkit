@@ -11,7 +11,7 @@ require('nez').realize 'Set', (Set, test, context, should) ->
 
             catch error
 
-                error.should.match /undefined opts\.function/
+                error.should.match /undefined opts\.action/
                 test done
 
 
@@ -19,7 +19,7 @@ require('nez').realize 'Set', (Set, test, context, should) ->
 
             try 
 
-                Set.series targets: {}, function: 'action'
+                Set.series targets: {}, action: 'action'
                 throw 'missing throw'
                   
             catch error
@@ -34,7 +34,7 @@ require('nez').realize 'Set', (Set, test, context, should) ->
                 Set.series 
 
                     targets: []
-                    function: 'action'
+                    action: 'action'
 
                 throw 'missing throw'
 
@@ -57,7 +57,7 @@ require('nez').realize 'Set', (Set, test, context, should) ->
 
                         constructor: (@seq) -> 
 
-                        action: (arg1, arg2, arg3, callback) ->
+                        functionName: (arg1, arg2, arg3, callback) ->
 
                             arg3.push @seq * arg2
 
@@ -67,23 +67,23 @@ require('nez').realize 'Set', (Set, test, context, should) ->
 
 
             eachCalledCount = 0
-            anotherResultVector = []
+            arg1 = 2
+            arg2 = 0.5
+            arg3 = []
 
             Set.series
 
                 targets: aSetOfThings
 
-                args: [2, 0.5, anotherResultVector]
-
-                afterEach: (errir, result) -> 
+                afterEach: (error, result) -> 
 
                     result.should.equal "SomeKindOfThing with #{eachCalledCount++}"
 
-                function: 'action', (error, result) ->
+                action: 'functionName', [arg1, arg2, arg3], (error, result) ->
 
                     result[result.length - 1].should.equal 'SomeKindOfThing with 499'
                     eachCalledCount.should.equal 500
-                    anotherResultVector[499].should.equal 499 / 2
+                    arg3[499].should.equal 499 / 2
                     test done
 
 
@@ -106,10 +106,11 @@ require('nez').realize 'Set', (Set, test, context, should) ->
 
                 ]
 
-                function: 'doSomething', (err, res) ->
+                action: 'doSomething', (err, res) ->
 
                     res.should.eql ['ONE', 'TWO', 'THING__3']
                     @callbackContext.should.equal 'this'
+                    test done
 
 
 
@@ -118,3 +119,16 @@ require('nez').realize 'Set', (Set, test, context, should) ->
         it 'can optionally be configured complete the series and populate all the errors into the callback as an array'
 
 
+
+
+            #console.log do:ne()
+            # # Set.series
+            # #     targets: []
+            #     console.log actions:
+            #         function1: 
+            #             args: ['arg1', 'arg2']
+            #             callback: ->
+            #         function2: 
+            #             args: []
+            #             callback: ->
+                
