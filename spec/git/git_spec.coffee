@@ -1,7 +1,6 @@
-require('nez').realize 'Git', (Git, test, context) -> 
+require('nez').realize 'Git', (Git, test, it, should) -> 
 
-    context 'in CONTEXT', (does) ->
+    it 'exports git/repo', (done) ->
 
-        does 'an EXPECTATION', (done) ->
-
-            test done
+        Git.repo.should.equal require '../../lib/git/repo'
+        test done

@@ -4,6 +4,15 @@ waterfall = require('async').waterfall
 
 module.exports = git = 
 
+    #
+    # export the repo object
+    #
+
+    repo: require './repo'
+
+
+    
+
     showOrigin: (workDir) -> 
 
         gitDir = git.gitDir workDir
