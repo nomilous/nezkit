@@ -124,6 +124,7 @@ require('nez').realize 'Set', (Set, test, context, should) ->
                 action: 'fn', (error, results) -> 
 
                     error.should.equal x
+                    test done
 
 
         it 'stops execution of the series upon error', (done) ->
