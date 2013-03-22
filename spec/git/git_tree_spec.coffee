@@ -1,4 +1,4 @@
-require('nez').realize 'Repo', (Repo, test, context) -> 
+require('nez').realize 'GitTree', (GitTree, test, context) -> 
 
     context 'in CONTEXT', (does) ->
 

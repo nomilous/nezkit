@@ -1,4 +1,4 @@
-Git   = require './git'
+Git   = require './git_support'
 Shell = require '../shell/shell'
 
 class GitRepo
