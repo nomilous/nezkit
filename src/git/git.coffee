@@ -1,6 +1,4 @@
-Shell     = require '../shell/shell'
-colors    = require 'colors'
-waterfall = require('async').waterfall
+
 
 module.exports = git = 
 

@@ -1,7 +1,7 @@
 fs      = require 'fs'
 colors  = require 'colors'  
 GitRepo = require './git_repo'
-series  = require '../set/set'
+series  = require('../set/set').series
 
 class GitTree
 
