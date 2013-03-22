@@ -113,6 +113,49 @@ require('nez').realize 'Set', (Set, test, context, should) ->
                     test done
 
 
+        it 'calls back with error', (done) -> 
+
+            x = new Error 'ERROR'
+
+            Set.series
+
+                targets: [ fn: (cb) -> cb x ]
+
+                action: 'fn', (error, results) -> 
+
+                    error.should.equal x
+
+
+        it 'stops execution of the series upon error', (done) ->
+
+            secondActionRan = false
+            calledAfterEach = false
+
+            Set.series
+
+                targets: [ 
+
+                    { fn: (cb) -> cb new Error 'first action failed' }
+                    { fn: (cb) -> 
+                        secondActionRan = true 
+                        cb null, 'ok' 
+                    } 
+
+                ]
+
+                afterEach: (error, result) -> 
+
+                    error.should.match /first action failed/
+                    calledAfterEach = true
+
+
+                action: 'fn', (error, results) -> 
+
+                    error.should.match /first action failed/
+                    secondActionRan.should.equal false
+                    calledAfterEach.should.equal true
+                    test done
+
 
         it 'can optionally be configured to traverse the series in reverse'
         it 'will default to terminating the series on error an populate the error into the callback'
