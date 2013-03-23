@@ -22,7 +22,6 @@ module.exports = support =
             # - three:b:c results in two matches ('three' and 'b') as mosules to inject, 
             #   cant think of a way to detect that _ref.b does not refer to an injectable.
             # 
-            # - 
             #
             # 
             # coffee> console.log '\n\n\n%s\n\n', require('coffee-script').compile '(one, two:a, three:b:c, four) ->'
@@ -39,7 +38,7 @@ module.exports = support =
             # 
             # 
             # 
-            
+
             modules.push module: arg.name
 
         return modules
