@@ -1,6 +1,6 @@
 require('nez').realize 'GitTree', (GitTree, test, context, should, GitRepo) -> 
 
-    context 'at first initialize', (it) ->
+    context 'at init()', (it) ->
 
         it 'searches for git repos', (And, findit) -> 
 
@@ -17,6 +17,11 @@ require('nez').realize 'GitTree', (GitTree, test, context, should, GitRepo) ->
                     switch event
 
                         when 'directory'
+
+                            #
+                            # pretend to find two git repos
+                            #
+
                             callback 'pretend/repo/.git/'
                             callback 'pretend/repo/node_modules/deeper/.git/'
                         
@@ -44,9 +49,9 @@ require('nez').realize 'GitTree', (GitTree, test, context, should, GitRepo) ->
 
 
 
-            And 'saves the .nez_tree file', (done) ->
+            And 'saves the .nez_tree file', (done, fs) ->
 
-                require('fs').writeFileSync = (path, contents) -> 
+                fs.writeFileSync = (path, contents) -> 
 
                     path.should.equal 'PATH/.nez_tree'
                     contents.should.match /fakeRepo/
