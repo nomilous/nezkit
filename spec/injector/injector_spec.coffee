@@ -73,3 +73,36 @@ require('nez').realize 'Injector', (Injector, test, context, should) ->
             Injector.inject (module) -> 
 
 
+
+        it 'supports injection using the argument scope heirarchy enabled by coffee-script', (done) -> 
+
+            # 
+            #  coffee> console.log '\n\n%s\n\n', require('coffee-script').compile ' (module:class:function:asArgName) -> '
+            #  
+            #  
+            #  (function() {
+            #  
+            #    (function(_arg) {
+            #      var asArgName;
+            #      asArgname = _arg.module["class"]["function"];
+            #    });
+            #  
+            #  }).call(this);
+            #  
+            #  
+
+            Injector.loadServices = (injectables) -> 
+
+                injectables.should.eql { module: 'africa' }
+                return [animal: impala: prance: -> 'graceful']
+
+
+            Injector.inject (africa:animal:impala:prance) -> 
+
+                prance().should.equal 'graceful'
+                test done
+
+            
+
+
+
