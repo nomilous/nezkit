@@ -18,7 +18,7 @@
     "exec-sync": "~0.1.5"
   },
   "devDependencies": {
-    "nez": "0.0.3",
+    "nez": "0.0.2",
     "should": "~1.2.2"
   }
 }
