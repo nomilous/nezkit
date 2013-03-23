@@ -94,7 +94,7 @@ require('nez').realize 'Injector', (Injector, test, context, should) ->
             Injector.loadServices = (injectables) -> 
 
                 injectables.should.eql { module: 'africa' }
-                return [animal: impala: prance: -> 'graceful']
+                return [module: africa: animal: impala: prance: -> 'graceful']
 
 
             Injector.inject (africa:animal:impala:prance) -> 
