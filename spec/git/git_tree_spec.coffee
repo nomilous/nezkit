@@ -49,11 +49,11 @@ require('nez').realize 'GitTree', (GitTree, test, context, should, GitRepo) ->
 
 
 
-            And 'saves the .nez_tree file', (done, fs) ->
+            And 'saves the .git-seed file', (done, fs) ->
 
                 fs.writeFileSync = (path, contents) -> 
 
-                    path.should.equal 'PATH/.nez_tree'
+                    path.should.equal 'PATH/.git-seed'
                     contents.should.match /fakeRepo/
                     test done
 
