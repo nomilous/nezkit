@@ -6,7 +6,7 @@ series  = require('../set/set').series
 
 #
 # **class** `GitSeed`
-# *injectable* `nezkit:git:seed`
+# *injectable* `nezkit$git$seed`
 #
 # A collection of GitRepo(s) that collectively define 
 # a deployable unity.

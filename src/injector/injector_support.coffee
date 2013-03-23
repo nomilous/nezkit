@@ -37,8 +37,17 @@ module.exports = support =
             # 
             # 
             # 
-            # 
 
-            modules.push module: arg.name
+            if module.match /\$/
+
+                parts = module.split '$'
+                modules.push 
+                    module: parts[0]
+                    chain: parts[1..parts.length-1]
+
+            else
+
+                modules.push 
+                    module: module
 
         return modules
