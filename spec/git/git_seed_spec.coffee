@@ -1,6 +1,6 @@
 require('nez').realize 'GitSeed', (GitSeed, test, context, should, GitRepo) -> 
 
-    context 'at init()', (it) ->
+    context 'GitSeed.init()', (it) ->
 
         it 'searches for git repos', (And, findit) -> 
 
@@ -61,7 +61,7 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should, GitRepo) ->
 
 
 
-            And 'initializes the GitTree', (done) ->
+            And 'initializes the GitSeed constituent GitRepo(s) array', (done) ->
 
                 GitSeed.prototype.save = ->
 
