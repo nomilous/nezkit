@@ -1,1 +1,3 @@
-module.exports = injector = {}
+module.exports = injector = 
+
+    inject: ->

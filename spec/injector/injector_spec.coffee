@@ -1,7 +1,8 @@
-require('nez').realize 'Injector', (Injector, test, context) -> 
+require('nez').realize 'Injector', (Injector, test, context, should) -> 
 
-    context 'in CONTEXT', (does) ->
+    context 'Injector.inject()', (it) ->
 
-        does 'an EXPECTATION', (done) ->
+        it 'is a function', (done) -> 
 
+            Injector.inject.should.be.an.instanceof Function
             test done
