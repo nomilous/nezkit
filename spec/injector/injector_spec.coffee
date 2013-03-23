@@ -62,3 +62,14 @@ require('nez').realize 'Injector', (Injector, test, context, should) ->
                 test done
 
 
+        it 'supports injection without predefined list', (done) -> 
+
+            Injector.loadServices = (injX) -> 
+
+                injX.length.should.equal 1
+                injX[0].module.should.equal 'module'
+                test done
+
+            Injector.inject (module) -> 
+
+

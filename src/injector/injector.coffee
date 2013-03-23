@@ -49,7 +49,7 @@ injector =
 
             # console.log "LIST:", list
 
-            fn.apply null, injector.loadServices( support.fn2modules( fn ) , list )
+            fn.apply null, injector.loadServices support.fn2modules( fn ) , list
 
 
 
