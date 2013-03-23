@@ -1,4 +1,6 @@
-module.exports = injector = 
+support = require './injector_support'
+
+injector = 
     
 
     #
@@ -27,7 +29,7 @@ module.exports = injector =
         if typeof arguments[0] == 'function' 
 
             fn = arguments[0]
-            fn.apply null, injector.loadServices fn.fing.args
+            fn.apply null, injector.loadServices support.fn2modules fn
 
         else
 
@@ -47,5 +49,8 @@ module.exports = injector =
 
             # console.log "LIST:", list
 
-            fn.apply null, injector.loadServices(fn.fing.args, list)
+            fn.apply null, injector.loadServices( support.fn2modules( fn ) , list )
 
+
+
+module.exports = injector

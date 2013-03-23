@@ -22,8 +22,8 @@ require('nez').realize 'Injector', (Injector, test, context, should) ->
             Injector.loadServices = (injectables, predefined) ->
 
                 injectables.should.eql [
-                    { name: 'pi' }
-                    { name: 'graviton' }
+                    { module: 'pi' }
+                    { module: 'graviton' }
                 ]
 
                 predefined.should.eql [
@@ -52,15 +52,13 @@ require('nez').realize 'Injector', (Injector, test, context, should) ->
 
             Injector.loadServices = (injX, preX) -> 
 
-                injX[1].name.should.equal 'could'
-                preX.push 'could'
+                injX[1].module.should.equal 'could'
+                preX.push 'would'
                 return preX
 
             Injector.inject [0], (zero, could) -> 
 
-                could.should.equal 'could'
+                could.should.equal 'would'
                 test done
-
-
 
 
