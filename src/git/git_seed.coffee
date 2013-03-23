@@ -3,7 +3,16 @@ colors  = require 'colors'
 GitRepo = require './git_repo'
 series  = require('../set/set').series
 
-class GitTree
+
+#
+# **class** `GitSeed`
+# *injectable* `nezkit:git:seed`
+#
+# A collection of GitRepo(s) that collectively define 
+# a deployable unity.
+#
+
+class GitSeed
 
     @init: (root) -> 
 
@@ -31,15 +40,13 @@ class GitTree
 
                 repoArray.push GitRepo.init path, seq++
 
-            tree = new GitTree root, repoArray
+            tree = new GitSeed root, repoArray
             tree.save()
-
-        
 
 
     constructor: (@root, list) -> 
 
-        @control = "#{@root}/.nez_tree"
+        @control = "#{@root}/.git-seed"
 
         if list instanceof Array
 
@@ -53,10 +60,12 @@ class GitTree
 
         try
 
-            fs.writeFileSync "#{@root}/.nez_tree", 
+
+
+            fs.writeFileSync @control, 
                 JSON.stringify( @array, null, 2 )
 
-            console.log '(write)'.green, "#{@root}/.nez_tree"
+            console.log '(write)'.green, @control
 
         catch error
 
@@ -73,7 +82,7 @@ class GitTree
         catch error
 
             require('./git_action').exitCode = 2
-            throw "explected control file: #{@root}/.nez_tree"
+            throw "explected control file: #{@control}"
 
         try
 
@@ -90,7 +99,7 @@ class GitTree
         catch error
 
             require('./git_action').exitCode = 3
-            throw "error loading control file: #{@root}/.nez_tree #{error.toString()}"
+            throw "error loading control file: #{@control} #{error.toString()}"
 
 
     status: -> 
@@ -123,4 +132,4 @@ class GitTree
 
 
 
-module.exports = GitTree
+module.exports = GitSeed

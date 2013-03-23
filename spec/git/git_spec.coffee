@@ -5,7 +5,7 @@ require('nez').realize 'Git', (Git, test, it, should) ->
         Git.repo.should.equal require '../../lib/git/git_repo'
         test done
 
-    it 'exports git/git_tree', (done) ->
+    it 'exports git/git_seed', (done) ->
 
-        Git.tree.should.equal require '../../lib/git/git_tree'
+        Git.seed.should.equal require '../../lib/git/git_seed'
         test done

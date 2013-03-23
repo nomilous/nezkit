@@ -1,6 +1,6 @@
-require('nez').realize 'GitTree', (GitTree, test, context, should, GitRepo) -> 
+require('nez').realize 'GitSeed', (GitSeed, test, context, should, GitRepo) -> 
 
-    context 'at init()', (it) ->
+    context 'GitSeed.init()', (it) ->
 
         it 'searches for git repos', (And, findit) -> 
 
@@ -49,21 +49,21 @@ require('nez').realize 'GitTree', (GitTree, test, context, should, GitRepo) ->
 
 
 
-            And 'saves the .nez_tree file', (done, fs) ->
+            And 'saves the .git-seed file', (done, fs) ->
 
                 fs.writeFileSync = (path, contents) -> 
 
-                    path.should.equal 'PATH/.nez_tree'
+                    path.should.equal 'PATH/.git-seed'
                     contents.should.match /fakeRepo/
                     test done
 
-                GitTree.init 'PATH'
+                GitSeed.init 'PATH'
 
 
 
-            And 'initializes the GitTree', (done) ->
+            And 'initializes the GitSeed constituent GitRepo(s) array', (done) ->
 
-                GitTree.prototype.save = ->
+                GitSeed.prototype.save = ->
 
                     @array.should.eql [
                         { fakeRepo: 'pretend/repo' }
@@ -71,12 +71,7 @@ require('nez').realize 'GitTree', (GitTree, test, context, should, GitRepo) ->
                     ]
 
                     test done
-
                     
-                GitTree.init 'PATH'
-
-            
-
-
+                GitSeed.init 'PATH'
 
 
