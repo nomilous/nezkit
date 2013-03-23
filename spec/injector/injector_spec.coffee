@@ -45,3 +45,22 @@ require('nez').realize 'Injector', (Injector, test, context, should) ->
                 pi.should.equal 3.14159265359
                 graviton.should.equal bozon
                 test done
+
+
+
+        it 'injects additional services per argument names', (done) -> 
+
+            Injector.loadServices = (injX, preX) -> 
+
+                injX[1].name.should.equal 'could'
+                preX.push 'could'
+                return preX
+
+            Injector.inject [0], (zero, could) -> 
+
+                could.should.equal 'could'
+                test done
+
+
+
+
