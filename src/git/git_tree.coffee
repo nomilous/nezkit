@@ -7,11 +7,20 @@ class GitTree
 
     @init: (root) -> 
 
-
-        list  = {}
         arrayOfGitWorkdirs = []
+        list  = {}
+        find  = require('findit').find root
 
-        find = require('findit').find root
+        find.on 'directory', (dir, stat) -> 
+
+            if match = dir.match /(.*)\/.git\//
+
+                return unless typeof list[match[1]] == 'undefined'
+
+                console.log '(found)'.green, "#{match[1]}/.git"
+                list[match[1]] = 1
+                arrayOfGitWorkdirs.push match[1]
+
 
         find.on 'end', ->
 
@@ -25,16 +34,7 @@ class GitTree
             tree = new GitTree root, repoArray
             tree.save()
 
-        find.on 'directory', (dir, stat) -> 
-
-            if match = dir.match /(.*)\/.git\//
-
-                return unless typeof list[match[1]] == 'undefined'
-
-                console.log '(found)'.green, "#{match[1]}/.git"
-                list[match[1]] = 1
-                arrayOfGitWorkdirs.push match[1]
-
+        
 
 
     constructor: (@root, list) -> 
