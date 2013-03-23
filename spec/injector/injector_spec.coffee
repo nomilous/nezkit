@@ -89,20 +89,20 @@ require('nez').realize 'Injector', (Injector, test, context, should) ->
             #  
             #  }).call(this);
             #  
-            #  
 
             Injector.loadServices = (injectables) -> 
 
-                injectables.should.eql { module: 'africa' }
-                return [module: africa: animal: impala: prance: -> 'graceful']
+                injectables.should.eql [{ _nested: ['animal'] }]
+                return [
+                    { animal: impala: prance: -> 'graceful' }
+                    { another: -> 'result'}
+                ]
 
 
-            Injector.inject (africa:animal:impala:prance) -> 
+            Injector.inject (animal:impala:prance:action, another:method) -> 
 
-                prance().should.equal 'graceful'
+                action().should.equal 'graceful'
+                method().should.equal 'result'
                 test done
-
-            
-
 
 
