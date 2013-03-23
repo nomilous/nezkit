@@ -1,5 +1,5 @@
 {
-  "name": "nez-kit",
+  "name": "nezkit",
   "description": "tools and utilities for nez",
   "version": "0.0.1",
   "author": "nomilous <nomilous@gmail.com>",
@@ -10,7 +10,7 @@
     }
   ],
   "main": "lib/kit",
-  "repository": "git@github.com:nomilous/nez-tools.git",
+  "repository": "git@github.com:nomilous/nezkit.git",
   "dependencies": {
     "async": "~0.2.6",
     "colors": "~0.6.0-1",

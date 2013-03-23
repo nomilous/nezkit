@@ -1,6 +1,6 @@
 #!/usr/bin/env coffee
 
-require('nez').objective 'Nez',
+require('nez').objective 'Nezkit',
 
     nimbal: 'https://localhost:10101/'
 
@@ -14,4 +14,4 @@ require('nez').objective 'Nez',
 
     """, (requirement) -> 
 
-        requirement.link 'requirements/hyper_edge'
+        requirement.link 'requirement/hyper_edge'
