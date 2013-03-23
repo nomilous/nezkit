@@ -7,5 +7,5 @@ module.exports = git =
     #
 
     repo: require './git_repo'
-    tree: require './git_tree'
+    seed: require './git_seed'
     

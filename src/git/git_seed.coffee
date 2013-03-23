@@ -3,7 +3,16 @@ colors  = require 'colors'
 GitRepo = require './git_repo'
 series  = require('../set/set').series
 
-class GitTree
+
+#
+# **class** `GitSeed`
+# *injectable* `nezkit:git:seed`
+#
+# A collection of GitRepo(s) that collectively define 
+# a deployable unity.
+#
+
+class GitSeed
 
     @init: (root) -> 
 
@@ -31,10 +40,8 @@ class GitTree
 
                 repoArray.push GitRepo.init path, seq++
 
-            tree = new GitTree root, repoArray
+            tree = new GitSeed root, repoArray
             tree.save()
-
-        
 
 
     constructor: (@root, list) -> 
@@ -125,4 +132,4 @@ class GitTree
 
 
 
-module.exports = GitTree
+module.exports = GitSeed
