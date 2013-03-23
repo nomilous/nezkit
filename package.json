@@ -1,7 +1,7 @@
 {
   "name": "nezkit",
   "description": "tools and utilities for nez",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "nomilous <nomilous@gmail.com>",
   "contributors": [
     {
@@ -18,7 +18,7 @@
     "exec-sync": "~0.1.5"
   },
   "devDependencies": {
-    "nez": "0.0.2",
+    "nez": "0.0.3",
     "should": "~1.2.2"
   }
 }
