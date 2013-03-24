@@ -196,8 +196,6 @@ module.exports = support =
 
         for call in stack
 
-            console.log 'STACK', call.file
-
             #
             # is the call coming from a spec run?
             #
@@ -257,19 +255,22 @@ module.exports = support =
 
     getModulePath: (name, root, search) -> 
 
+        #expression = "(.*\\/#{name})\\.(coffee|js)$" # darn...
+        expression = "(.*#{name})\\.(coffee|js)$"
+
         for dir in search
 
             source = null
 
             searchPath = root + "/#{dir}"
 
-            console.log "SEARCH:", searchPath
-
             if fs.existsSync searchPath
 
                 for file in wrench.readdirSyncRecursive(searchPath)
 
-                    if match = file.match new RegExp "^(.*#{name})\.(coffee|js)$"
+                    if match = file.match new RegExp expression
+
+                        continue unless match[1].split('/').pop() == name # ...it
 
                         if source 
 
