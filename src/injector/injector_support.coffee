@@ -1,3 +1,5 @@
+Inflection = require 'inflection'
+
 module.exports = support = 
 
     fn2modules: (fn) ->
@@ -183,4 +185,43 @@ module.exports = support =
                 #
 
                 _arg[name] = nextService
+
+    findModule: (config) ->
+
+        name  = Inflection.underscore config.module
+        stack = fing.trace()
+
+        #
+        # first call in stack is toooo local (ie. this.findModule)
+        # (ignore it)
+        # 
+
+        count = 0
+
+        for calls in stack
+
+            #
+            # is the call coming from a spec run?
+            #
+            # ASSUMPTION1 
+            # ===========
+            # 
+            # If the call is coming from a spec run then there
+            # will be one instance of '/spec/' in the callers 
+            # path and it will be a subdirectory of the repo root.
+            # 
+
+            if calls.file.match /injector_support.js$/
+
+                continue
+
+            if match = calls.file.match /(.*)\/spec\/.*/
+
+                path = match[1]
+                modulePath = support.getModulePath name, match[1]
+                return require modulePath
+
+            else
+
+                continue
 

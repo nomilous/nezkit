@@ -1,5 +1,33 @@
 require('nez').realize 'InjectorSupport', (InjectorSupport, test, context, should, Injector) -> 
 
+    context 'findModule()', (context) -> 
+
+        context 'when called from a spec run', (it) -> 
+
+            it 'finds the repo root by matching for /spec/', (done) -> 
+
+                #
+                # mock support.getModule
+                #
+
+                InjectorSupport.getModulePath = (fileBase, path) ->
+
+                    fileBase.should.equal 'name_of_module'
+                    path.should.match /node_modules\/nezkit$/
+
+                    #
+                    # return a findable module path
+                    #
+
+                    return '../../lib/injector/injector'
+
+
+                InjectorSupport.findModule(
+
+                    { module: 'NameOfModule' }
+
+                ).should.equal Injector
+
 
     context 'fn2modules()', (it) -> 
 
@@ -309,4 +337,5 @@ require('nez').realize 'InjectorSupport', (InjectorSupport, test, context, shoul
                     Mod4: 'Mod4' 
                 }
             ]
+
 

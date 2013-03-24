@@ -49,6 +49,21 @@ require('nez').realize 'Injector', (Injector, test, context, should, InjectorSup
                 some fairly interesting things can be done
 
 
+        it 'can inject local modules by using CamelCase', (done) -> 
+
+            Injector.inject (GitRepo) -> 
+
+                GitRepo.should.equal require '../../lib/git/git_repo'
+                test done
+
+        it 'can inject local module subcomponents', (done) -> 
+
+            Injector.inject (Set:series, GitSeed) ->
+
+                series.should.equal require('../../lib/set/set').series
+                GitSeed.should.equal require '../../lib/git/git_seed'
+                test done
+
     context 'Injector.inject()', (it) ->
 
 
