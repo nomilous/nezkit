@@ -53,21 +53,14 @@ module.exports = support =
 
         for narg in funcStr.match /_(arg|ref)\.(\w*)/g
 
-            chain = narg.split('.')
-            ref   = chain.shift()
-            
-            if ref == '_arg'
+            chain     = narg.split('.')
+            ref       = chain.shift()
+            targetArg = funcStr.match( new RegExp "(\\w*) = _arg.#{chain[0]}" )[1]
 
-                targetArg = funcStr.match( new RegExp "(\\w*) = _arg.#{chain[0]}" )[1]
-
-                #
-                # "and final as flat"
-                #
-                chain.push targetArg unless chain[ chain.length - 1 ] == targetArg
-
-            else if ref == '__ref'
-
-                console.log funcStr
+            #
+            # "and final as flat"
+            #
+            chain.push targetArg unless chain[ chain.length - 1 ] == targetArg
 
             nestings[targetArg] = chain
 
