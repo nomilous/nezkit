@@ -44,6 +44,16 @@ require('nez').realize 'InjectorSupport', (InjectorSupport, test, it, should) ->
 
             )
 
+            require('coffee-script').compile(
+
+                '(a, b:c, d:e:f, g) -> '
+
+            ).should.match(
+
+                /function\(a, _arg\)/
+
+            )
+
             test done
 
 
@@ -94,6 +104,7 @@ require('nez').realize 'InjectorSupport', (InjectorSupport, test, it, should) ->
             InjectorSupport.fn2modules(
 
                 (mod0, mod1:class1:function1, mod2:class2, mod3:class3, mod4) -> 
+                    '(mod0, mod1:class1:function1, mod2:class2, mod3:class3, mod4)'
 
             ).should.eql [
 
@@ -115,9 +126,11 @@ require('nez').realize 'InjectorSupport', (InjectorSupport, test, it, should) ->
 
         With 'mixed depth and deepest middle', (done) -> 
 
+            
             InjectorSupport.fn2modules(
 
                 (mod0, mod2:class2, mod1:class1:function1, mod3:class3, mod4) -> 
+                    '(mod0, mod2:class2, mod1:class1:function1, mod3:class3, mod4)'
 
             ).should.eql [
 
