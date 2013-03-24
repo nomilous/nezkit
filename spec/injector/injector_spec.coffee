@@ -42,6 +42,10 @@ require('nez').realize 'Injector', (Injector, test, context, should) ->
 
             searchedCount = 0
 
+            #
+            # mock findModule
+            #
+
             Injector.findModule = (config) -> 
                 
                 return "Fake#{config.module}"
@@ -52,6 +56,7 @@ require('nez').realize 'Injector', (Injector, test, context, should) ->
                     {module: 'LocalModule1'}
                     {module: 'should'}
                     {module: 'LocalModule2'}
+
                 ], []
 
             ).should.eql [
@@ -63,6 +68,47 @@ require('nez').realize 'Injector', (Injector, test, context, should) ->
             ]
 
             test done
+
+
+        it 'arranges _arg for the focussed injection', (done) -> 
+
+            services = [
+                {module: 'mod0'}
+                {module: 'mod1'}
+                {
+                    _nested: {
+                        class2: ['Mod2', 'class2']
+                        class3: ['Mod3', 'class3']
+                        Mod4:   ['Mod4']  
+                    }
+                }
+            ]
+
+            preDefined = ['mod0', 'mod1']
+
+            #
+            # mock findModule
+            #
+
+            Injector.findModule = (config) -> 
+                
+                switch config.module
+
+                    when 'Mod2' then return class2: 'class2'
+                    when 'Mod3' then return class3: 'class3'
+                    when 'Mod4' then return 'Mod4'
+
+            services = Injector.loadServices( services, preDefined )
+
+            services.should.eql [
+                'mod0'
+                'mod1'
+                { 
+                    Mod2: 'class2'
+                    Mod3: 'class3'
+                    Mod4: 'Mod4' 
+                }
+            ]
 
 
     context 'Injector.inject()', (it) ->
@@ -81,7 +127,7 @@ require('nez').realize 'Injector', (Injector, test, context, should) ->
             loadedServices = false
 
             #
-            # mock service loader
+            # mock loadServices
             #
 
             Injector.loadServices = (injectables, predefined) ->
@@ -115,6 +161,10 @@ require('nez').realize 'Injector', (Injector, test, context, should) ->
 
         it 'injects additional services per argument names', (done) -> 
 
+            #
+            # mock loadServices
+            #
+
             Injector.loadServices = (injX, preX) -> 
 
                 injX[1].module.should.equal 'could'
@@ -128,6 +178,10 @@ require('nez').realize 'Injector', (Injector, test, context, should) ->
 
 
         it 'supports injection without predefined list', (done) -> 
+
+            #
+            # mock loadServices
+            #
 
             Injector.loadServices = (injX) -> 
 
