@@ -114,7 +114,8 @@ injector =
         # 
         #
 
-        services.push {} # destined to be _arg (per above)
+        services.push {}
+        _arg = services[services.length - 1]
 
         for name of config
 
@@ -139,12 +140,7 @@ injector =
             #
 
             injector.loadServices rebuild, services
-
             nextService = services.pop()
-
-            #
-            # append this service into _arg
-            #
 
             if defn.length > 1
 
@@ -152,11 +148,27 @@ injector =
                 # ''slide''
                 #
 
-                services[ services.length - 1 ][defn[0]] = nextService[name]
+                _arg[defn[0]] = nextService[name]
 
             else
 
-                services[ services.length - 1 ][name] = nextService
+                #
+                # flat (no nesting)
+                # 
+                # necessary here because flat args that follow nested ones
+                # also need to be appended into _arg, because...
+                # 
+                #    (flat1, module1:class1, flat2) -> 
+                #      
+                # ...becomes...
+                # 
+                #    function(flat1, _arg) {
+                #        var class1, flat2;
+                #        class1 = _arg.module1, flat2 = _arg.flat2;
+                #    }
+                #
+
+                _arg[name] = nextService
 
 
 module.exports = injector
