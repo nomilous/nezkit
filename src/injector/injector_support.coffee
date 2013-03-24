@@ -12,16 +12,35 @@ module.exports = support =
 
                 console.log '\n\n%s\n\n', fn.toString()
 
-                nested = []
+                nestings = []
 
                 for narg in fn.toString().match /_(arg|ref)\.(\w*)/g
 
-                    nested.push narg.split('.')[1]
+                    chain = narg.split('.')
 
-                modules.push _nested: nested
+                    nested = []
+                    name   = chain[1]
+                    depth  = chain.length 
+
+                    if fn.toString().match new RegExp "#{name} = _arg.#{name}"
+
+                        #
+                        # "and final as flat"
+                        #
+
+                        depth = 1
+
+                    nested.push depth
+                    nested.push name
+
+                    nestings.push nested
+
+                modules.push _nested: nestings
 
             else
 
                 modules.push module: arg.name
+
+        #console.log JSON.stringify modules, null, 2
 
         return modules
