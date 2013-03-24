@@ -34,6 +34,20 @@ require('nez').realize 'Injector', (Injector, test, context, should, InjectorSup
                 test done 
 
 
+        it 'can do some fairly interesting things', (done) -> 
+
+            Injector.inject [ 
+                -> # some()
+                -> # fairly()
+                -> # interesting()
+                -> # things()
+                -> # can()
+                (good) -> test good
+
+            ], (some, fairly, interesting, things, can, be) -> 
+
+                some fairly interesting things can be done
+
 
     context 'Injector.inject()', (it) ->
 
