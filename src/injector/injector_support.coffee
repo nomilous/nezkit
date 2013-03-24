@@ -2,6 +2,13 @@ Inflection = require 'inflection'
 wrench     = require 'wrench'
 fs         = require 'fs'
 
+#
+# TODO: fix 'Cannot redefine property: fing'
+#       very strange...
+#
+
+require 'fing' if typeof fing == 'undefined'
+
 module.exports = support = 
 
     fn2modules: (fn) ->
