@@ -16,7 +16,7 @@ require('nez').realize 'InjectorSupport', (InjectorSupport, test, it, should) ->
         test done
 
 
-    it 'supports : delimited hierarchy', (With) -> 
+    it 'supports : delimited hierarchy for foussed injection', (With) -> 
 
         # 
         # console.log '\n%s\n', require('coffee-script').compile '(one, two:a, three:b)->'
@@ -65,6 +65,101 @@ require('nez').realize 'InjectorSupport', (InjectorSupport, test, it, should) ->
                         class2: ['mod2', 'class2']
                         class3: ['mod3', 'class3']
                         mod4:   ['mod4']  
+
+                    }
+                }
+            ]
+
+            test done
+
+
+        With 'mixed depth and deepest firts', (done) -> 
+
+            InjectorSupport.fn2modules(
+
+                (mod0, mod1:class1:function1, mod2:class2, mod3:class3, mod4) -> 
+
+            ).should.eql [
+
+                {module: 'mod0'}
+                {
+                    _nested: {
+
+                        function1: ['mod1','class1','function1']
+                        class2:    ['mod2', 'class2']
+                        class3:    ['mod3', 'class3']
+                        mod4:      ['mod4']  
+
+                    }
+                }
+            ]
+
+            test done
+
+
+        With 'mixed depth and deepest middle', (done) -> 
+
+            InjectorSupport.fn2modules(
+
+                (mod0, mod2:class2, mod1:class1:function1, mod3:class3, mod4) -> 
+
+            ).should.eql [
+
+                {module: 'mod0'}
+                {
+                    _nested: {
+
+                        class2:    ['mod2', 'class2']
+                        function1: ['mod1','class1','function1']
+                        class3:    ['mod3', 'class3']
+                        mod4:      ['mod4']  
+
+                    }
+                }
+            ]
+
+            test done
+
+
+        With 'mixed depth and deepest almost last', (done) -> 
+
+            InjectorSupport.fn2modules(
+
+                (mod0, mod2:class2, mod1:class1:function1, mod4) -> 
+
+            ).should.eql [
+
+                {module: 'mod0'}
+                {
+                    _nested: {
+
+                        class2:    ['mod2', 'class2']
+                        function1: ['mod1','class1','function1']
+                        mod4:      ['mod4']  
+
+                    }
+                }
+            ]
+
+            test done
+
+
+        With 'mixed depth and deepest last', (done) -> 
+
+            InjectorSupport.fn2modules(
+
+                (mod0, mod2:class2, mod4, mod1:class1:function1) -> 
+
+            ).should.eql [
+
+                {module: 'mod0'}
+                {
+                    _nested: {
+
+                        class2:    ['mod2', 'class2']
+                        mod4:      ['mod4']  
+                        function1: ['mod1','class1','function1']
+                        
 
                     }
                 }
