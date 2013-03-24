@@ -1,10 +1,6 @@
 require('nez').realize 'Injector', (Injector, test, context, should, InjectorSupport) -> 
 
-
-
     context 'INTEGRATIONS', (it) -> 
-
-
 
         it 'injects npm modules, or their functions and subcomponents', (done) -> 
 
@@ -15,7 +11,6 @@ require('nez').realize 'Injector', (Injector, test, context, should, InjectorSup
                 test done
 
 
-
         it 'can to that in the opposite order', (done) -> 
 
             Injector.inject (findit:find, async) -> 
@@ -23,7 +18,6 @@ require('nez').realize 'Injector', (Injector, test, context, should, InjectorSup
                 find.should.equal require('findit').find
                 async.should.equal require 'async'
                 test done
-
 
 
         it 'can inject positionally as specified', (done) -> 
@@ -56,6 +50,7 @@ require('nez').realize 'Injector', (Injector, test, context, should, InjectorSup
                 GitRepo.should.equal require '../../lib/git/git_repo'
                 test done
 
+
         it 'can inject local module subcomponents', (done) -> 
 
             Injector.inject (Set:series, GitSeed) ->
@@ -63,6 +58,17 @@ require('nez').realize 'Injector', (Injector, test, context, should, InjectorSup
                 series.should.equal require('../../lib/set/set').series
                 GitSeed.should.equal require '../../lib/git/git_seed'
                 test done
+
+
+        it 'can inject a mixture of services', (done) -> 
+
+            Injector.inject [should], (does, Set:series, GitSeed) ->
+
+                does.not.exist()
+                series.should.equal require('../../lib/set/set').series
+                GitSeed.should.equal require '../../lib/git/git_seed'
+                test done
+
 
     context 'Injector.inject()', (it) ->
 
