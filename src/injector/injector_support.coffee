@@ -1,4 +1,6 @@
 Inflection = require 'inflection'
+wrench     = require 'wrench'
+fs         = require 'fs'
 
 module.exports = support = 
 
@@ -219,7 +221,8 @@ module.exports = support =
 
                 path = match[1]
                 modulePath = support.getModulePath name, path, ['lib','app','bin']
-                return require modulePath
+                return require modulePath if modulePath
+                throw new Error "Injector failed to locate #{name}.js in #{path}"
 
 
             #
@@ -243,15 +246,39 @@ module.exports = support =
 
                     path = match[1]
                     modulePath = support.getModulePath name, match[1], [match[2]]
-                    return require modulePath
+                    return require modulePath if modulePath
+                    throw new Error "Injector failed to locate #{name}.js in #{path}"
 
                 continue
 
             previous = call.file
 
+        throw new Error "Injector failed to locate #{name}.js"
+
     getModulePath: (name, root, search) -> 
 
-        console.log arguments
-        
+        for dir in search
+
+            source = null
+
+            searchPath = root + "/#{dir}"
+
+            console.log "SEARCH:", searchPath
+
+            if fs.existsSync searchPath
+
+                for file in wrench.readdirSyncRecursive(searchPath)
+
+                    if match = file.match new RegExp "^(.*#{name})\.(coffee|js)$"
+
+                        if source 
+
+                            throw new Error "Found more than 1 source for module '#{name}'"
+
+                        else
+
+                            source = "#{searchPath}/#{match[1]}"
+
+            return source
 
 
