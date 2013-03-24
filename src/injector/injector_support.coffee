@@ -74,9 +74,8 @@ module.exports = support =
         modules.push _nested: nestings
 
 
-    loadServices: (dynamic, preDefined) -> 
+    loadServices: (dynamic, preDefined = []) -> 
 
-        #console.log arguments
 
         skip = preDefined.length
 

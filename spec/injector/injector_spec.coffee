@@ -1,5 +1,40 @@
 require('nez').realize 'Injector', (Injector, test, context, should, InjectorSupport) -> 
 
+
+
+    context 'INTEGRATIONS', (it) -> 
+
+
+
+        it 'injects npm modules, or their functions and subcomponents', (done) -> 
+
+            Injector.inject (findit, async:waterfall) -> 
+
+                findit.should.equal require 'findit'
+                waterfall.should.equal require('async').waterfall
+                test done
+
+
+
+        it 'can to that in the opposite order', (done) -> 
+
+            Injector.inject (findit:find, async) -> 
+
+                find.should.equal require('findit').find
+                async.should.equal require 'async'
+                test done
+
+
+
+        it 'can inject positionally as specified', (done) -> 
+
+            Injector.inject [ should, should ], (could, would) -> 
+
+                (should == would == could).should.equal true is not false
+                test done 
+
+
+
     context 'Injector.inject()', (it) ->
 
 
