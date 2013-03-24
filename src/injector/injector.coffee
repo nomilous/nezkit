@@ -52,5 +52,49 @@ injector =
             fn.apply null, injector.loadServices support.fn2modules( fn ) , list
 
 
+    loadServices: (dynamic, preDefined) -> 
+
+        skip = preDefined.length
+
+        services = preDefined
+
+        for name of dynamic
+
+            continue if skip-- > 0
+
+            config = dynamic[name]
+
+            if config.module.match /^[A-Z]/
+
+                #
+                # Inject local module (from ./lib of ./app)
+                #
+
+                services.push require Injector.findModule arg.name
+
+            else
+
+                #
+                # Inject installed npm module
+                #
+
+                try
+
+                    module = require config.module
+
+                catch error
+
+                    #
+                    # TODO: consider auto installing npms 
+                    #       upon first injection as --save-dev
+                    #
+                    
+                    throw error
+
+                services.push module
+
+        #console.log "services:", services
+
+        return services
 
 module.exports = injector

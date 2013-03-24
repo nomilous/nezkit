@@ -1,5 +1,43 @@
 require('nez').realize 'Injector', (Injector, test, context, should) -> 
 
+    context 'Injector.loadServices()', (it) -> 
+
+        it 'loads modules dynamically', (done) -> 
+
+            try
+
+                Injector.loadServices [ module: 'name' ], []
+
+            catch error
+
+                error.should.match /Cannot find module 'name'/
+                test done
+
+
+        it 'loads modules dynamically in addition to preDefined modules', (done) -> 
+
+            Injector.loadServices( 
+
+                [ 
+                    {module: 'preDefined1'}
+                    {module: 'preDefined2'}
+                    {module: 'should'}
+                    {module: 'nez'}
+                ]
+                ['preDefined1', 'preDefined2'] 
+
+            ).should.eql [
+
+                'preDefined1'
+                'preDefined2'
+                require 'should'
+                require 'nez'
+
+            ]
+
+            test done
+
+
     context 'Injector.inject()', (it) ->
 
 
