@@ -32,19 +32,13 @@ injector =
 
             list = arguments[0]
 
-            #
-            # fn as last argument
-            #
-
             for key of arguments
 
                 #
-                # function is the last argument
+                # fn is the last argument
                 #
 
                 fn = arguments[key]
-
-            # console.log "LIST:", list
 
             fn.apply null, injector.support.loadServices injector.support.fn2modules( fn ) , list
 
