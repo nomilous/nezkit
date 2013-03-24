@@ -10,10 +10,11 @@ require('nez').realize 'InjectorSupport', (InjectorSupport, test, context, shoul
                 # mock support.getModule
                 #
 
-                InjectorSupport.getModulePath = (fileBase, path) ->
+                InjectorSupport.getModulePath = (name, root, search) ->
 
-                    fileBase.should.equal 'name_of_module'
-                    path.should.match /node_modules\/nezkit$/
+                    name.should.equal 'name_of_module'
+                    root.should.match /node_modules\/nezkit$/
+                    search.should.eql ['lib', 'app', 'bin']
 
                     #
                     # return a findable module path

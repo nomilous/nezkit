@@ -188,17 +188,13 @@ module.exports = support =
 
     findModule: (config) ->
 
-        name  = Inflection.underscore config.module
-        stack = fing.trace()
+        name     = Inflection.underscore config.module
+        stack    = fing.trace()
+        previous = null
 
-        #
-        # first call in stack is toooo local (ie. this.findModule)
-        # (ignore it)
-        # 
+        for call in stack
 
-        count = 0
-
-        for calls in stack
+            console.log 'STACK', call.file
 
             #
             # is the call coming from a spec run?
@@ -207,21 +203,55 @@ module.exports = support =
             # ===========
             # 
             # If the call is coming from a spec run then there
-            # will be one instance of '/spec/' in the callers 
+            # will be one instance of /spec/ in the callers 
             # path and it will be a subdirectory of the repo root.
             # 
 
-            if calls.file.match /injector_support.js$/
+            if call.file.match /injector_support.js$/
+
+                #
+                # ignore self in stack
+                #
 
                 continue
 
-            if match = calls.file.match /(.*)\/spec\/.*/
+            if match = call.file.match /(.*)\/spec\/.*/
 
                 path = match[1]
-                modulePath = support.getModulePath name, match[1]
+                modulePath = support.getModulePath name, path, ['lib','app','bin']
                 return require modulePath
 
-            else
+
+            #
+            # if not from a spec run then
+            # 
+            # ASSUMPTION2
+            # ===========
+            # 
+            # The module to be injected will be located in 
+            # either of the directory trees rooted at the
+            # first matched instance of either /lib/, /app/
+            # or /bin/ that immediately preceeds the first
+            # stack call being made from the node_module 
+            # loader itself 'module.js'
+            # 
+            #
+
+            else if call.file == 'module.js'
+
+                if match = previous.match /(.*)\/(lib|app|bin)\//
+
+                    path = match[1]
+                    modulePath = support.getModulePath name, match[1], [match[2]]
+                    return require modulePath
 
                 continue
+
+            previous = call.file
+
+    getModulePath: (name, root, search) -> 
+
+        console.log arguments
+        
+
 
