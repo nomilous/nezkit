@@ -14,7 +14,7 @@ require('nez').realize 'Injector', (Injector, test, context, should) ->
                 test done
 
 
-        it 'loads modules dynamically in addition to preDefined modules', (done) -> 
+        it 'loads npm modules dynamically in addition to preDefined modules', (done) -> 
 
             Injector.loadServices( 
 
@@ -32,6 +32,33 @@ require('nez').realize 'Injector', (Injector, test, context, should) ->
                 'preDefined2'
                 require 'should'
                 require 'nez'
+
+            ]
+
+            test done
+
+
+        it 'loads local modules when CamelCase', (done) -> 
+
+            searchedCount = 0
+
+            Injector.findModule = (config) -> 
+                
+                return "Fake#{config.module}"
+                
+            Injector.loadServices( 
+
+                [ 
+                    {module: 'LocalModule1'}
+                    {module: 'should'}
+                    {module: 'LocalModule2'}
+                ], []
+
+            ).should.eql [
+
+                'FakeLocalModule1'
+                require 'should'
+                'FakeLocalModule2'
 
             ]
 

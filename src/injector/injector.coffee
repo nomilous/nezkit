@@ -69,8 +69,7 @@ injector =
                 #
                 # Inject local module (from ./lib of ./app)
                 #
-
-                services.push require Injector.findModule arg.name
+                services.push injector.findModule config
 
             else
 
