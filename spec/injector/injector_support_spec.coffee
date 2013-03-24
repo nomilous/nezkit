@@ -31,6 +31,22 @@ require('nez').realize 'InjectorSupport', (InjectorSupport, test, it, should) ->
         # }).call(this);
         # 
 
+
+        With 'a test that fails if future coffee-script compiler output changes', (done) -> 
+
+            require('coffee-script').compile(
+
+                '(a, b:c, d:e:f, g) -> '
+
+            ).should.match(
+
+                /c = _arg\.b, \(_ref = _arg\.d, f = _ref\.e, g = _ref\.g\);/
+
+            )
+
+            test done
+
+
         With 'all having uniform depth', (done) -> 
 
             InjectorSupport.fn2modules(
