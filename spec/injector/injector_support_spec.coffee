@@ -15,25 +15,20 @@ require('nez').realize 'InjectorSupport', (InjectorSupport, test, it, should) ->
 
         test done
 
-    # it 'supports args with hierarchy', (done) -> 
-    #     InjectorSupport.fn2modules(
-    #         (module1, module2:class2, module3:class3, module4:class4) -> 
-    #     ).should.eql [
-    #         { module: 'module1' }
-    #         { _nested: ['module2', 'module3', 'module4'] }
-    #     ]
-    #     test done
 
-    it 'supports hierarchical injection delimited with $', (done) -> 
+    it 'supports : delimited hierarchy', (With) -> 
 
-        InjectorSupport.fn2modules( 
 
-            (shape$square$area) -> 
+        With 'all having uniform depth', (done) -> 
 
-        ).should.eql [
-        
-            { module: 'shape', chain: ['square','area'] }
+            InjectorSupport.fn2modules(
 
-        ]
+                (mod1:class1, mod2:class2, mod3:class3) -> 
 
-        test done
+            ).should.eql [
+
+                { _nested: [ 'mod1', 'mod2', 'mod3' ] }
+
+            ]
+
+            test done
