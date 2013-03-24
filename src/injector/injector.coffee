@@ -1,8 +1,5 @@
-support = require './injector_support'
-
 injector = 
     
-
     #
     # **function** `injector.inject (module [,module2, ...]) ->` 
     # **function** `injector.inject [list,of,objects], (list, of, objects, module [,module2, ...]) ->`
@@ -29,7 +26,7 @@ injector =
         if typeof arguments[0] == 'function' 
 
             fn = arguments[0]
-            fn.apply null, support.loadServices support.fn2modules fn
+            fn.apply null, injector.support.loadServices injector.support.fn2modules fn
 
         else
 
@@ -49,7 +46,12 @@ injector =
 
             # console.log "LIST:", list
 
-            fn.apply null, support.loadServices support.fn2modules( fn ) , list
+            fn.apply null, injector.support.loadServices injector.support.fn2modules( fn ) , list
 
+    #
+    # also export injector_support (potentially usefull functionality)
+    #
+
+    support: require './injector_support'
 
 module.exports = injector
