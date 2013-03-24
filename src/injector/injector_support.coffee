@@ -3,6 +3,7 @@ module.exports = support =
     fn2modules: (fn) ->
 
         modules = []
+        funcStr = fn.toString()
 
         for arg in fn.fing.args
 
@@ -10,30 +11,25 @@ module.exports = support =
 
             if module.match /^_arg/
 
-                console.log '\n\n%s\n\n', fn.toString()
+                #console.log '\n\n%s\n\n', funcStr
 
-                nestings = []
+                nestings = {}
 
-                for narg in fn.toString().match /_(arg|ref)\.(\w*)/g
+                for narg in funcStr.match /_(arg|ref)\.(\w*)/g
 
                     chain = narg.split('.')
+                    ref   = chain.shift()
+                    
+                    if ref == '_arg'
 
-                    nested = []
-                    name   = chain[1]
-                    depth  = chain.length 
-
-                    if fn.toString().match new RegExp "#{name} = _arg.#{name}"
+                        targetArg = funcStr.match( new RegExp "(\\w*) = _arg.#{chain[0]}" )[1]
 
                         #
                         # "and final as flat"
                         #
+                        chain.push targetArg unless chain[ chain.length - 1 ] == targetArg
 
-                        depth = 1
-
-                    nested.push depth
-                    nested.push name
-
-                    nestings.push nested
+                    nestings[targetArg] = chain
 
                 modules.push _nested: nestings
 

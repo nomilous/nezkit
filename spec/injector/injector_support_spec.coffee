@@ -39,13 +39,12 @@ require('nez').realize 'InjectorSupport', (InjectorSupport, test, it, should) ->
 
             ).should.eql [{ 
 
-                _nested: [       # 
-                    [2,'mod1']   # all these need to be injected as
-                    [2,'mod2']   # the single _arg as compiled
-                    [2,'mod3']   # 
-                                 # 
-                                 # 
-                ] 
+                _nested: 
+
+                    class1: ['mod1','class1']   # all these need to be injected as
+                    class2: ['mod2','class2']   # the single _arg as compiled
+                    class3: ['mod3','class3']   #                 
+                
             }]
 
             test done
@@ -61,13 +60,13 @@ require('nez').realize 'InjectorSupport', (InjectorSupport, test, it, should) ->
                 {module: 'mod0'}
                 {module: 'mod1'}
                 {
-                    _nested: [ 
+                    _nested: {
 
-                        [2,'mod2']
-                        [2,'mod3']
-                        [1,'mod4']  # <----------- # starts getting tricky when flat
-                                                   # injectables follow hierarchic ones
-                    ] 
+                        class2: ['mod2', 'class2']
+                        class3: ['mod3', 'class3']
+                        mod4:   ['mod4']  
+
+                    }
                 }
             ]
 
