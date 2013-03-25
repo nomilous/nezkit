@@ -1,1 +1,5 @@
-module.exports = npm = {}
+module.exports = npm = 
+
+    install: (root, gitSeed) -> 
+
+        

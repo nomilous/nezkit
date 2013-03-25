@@ -44,7 +44,7 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should, GitRepo) ->
                     when 0 then path.should.equal 'pretend/repo'
                     when 1 then path.should.equal 'pretend/repo/node_modules/deeper'
 
-                return fakeRepo: path
+                return path: path
 
 
 
@@ -54,7 +54,7 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should, GitRepo) ->
                 fs.writeFileSync = (path, contents) -> 
 
                     path.should.equal 'PATH/.git-seed'
-                    contents.should.match /fakeRepo/
+                    contents.should.match /path/
                     test done
 
                 GitSeed.init 'PATH'
@@ -66,12 +66,11 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should, GitRepo) ->
                 GitSeed.prototype.save = ->
 
                     @array.should.eql [
-                        { fakeRepo: 'pretend/repo' }
-                        { fakeRepo: 'pretend/repo/node_modules/deeper' }
+                        { path: 'pretend/repo' }
+                        { path: 'pretend/repo/node_modules/deeper' }
                     ]
 
                     test done
                     
                 GitSeed.init 'PATH'
-
 

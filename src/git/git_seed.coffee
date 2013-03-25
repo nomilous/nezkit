@@ -60,9 +60,22 @@ class GitSeed
 
         try
 
+            for repo in @array
+
+                #
+                # chop off root part of path before save
+                # ie preceding/folders passed in with --root
+                #
+
+                repo.path = repo.path.replace @root, '.'
+
+                if repo.root and repo.path != '.'
+
+                    throw 'error determining path for root repo'
 
 
             fs.writeFileSync @control, 
+
                 JSON.stringify( @array, null, 2 )
 
             console.log '(write)'.green, @control
@@ -81,7 +94,6 @@ class GitSeed
 
         catch error
 
-            require('./git_action').exitCode = 2
             throw "explected control file: #{@control}"
 
         try
@@ -98,7 +110,6 @@ class GitSeed
 
         catch error
 
-            require('./git_action').exitCode = 3
             throw "error loading control file: #{@control} #{error.toString()}"
 
 
