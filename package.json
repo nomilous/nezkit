@@ -17,7 +17,8 @@
     "findit": "~0.1.2",
     "exec-sync": "~0.1.5",
     "inflection": "~1.2.5",
-    "wrench": "~1.4.4"
+    "wrench": "~1.4.4",
+    "fing": "0.0.4"
   },
   "devDependencies": {
     "nez": "0.0.2",
