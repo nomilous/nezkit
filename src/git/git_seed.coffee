@@ -60,20 +60,6 @@ class GitSeed
 
         try
 
-            for repo in @array
-
-                #
-                # chop off root part of path before save
-                # ie preceding/folders passed in with --root
-                #
-
-                repo.path = repo.path.replace @root, '.'
-
-                if repo.root and repo.path != '.'
-
-                    throw 'error determining path for root repo'
-
-
             fs.writeFileSync @control, 
 
                 JSON.stringify( @array, null, 2 )
