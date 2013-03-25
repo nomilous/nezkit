@@ -33,11 +33,3 @@ module.exports = kit =
     #
 
     set: require './set/set'
-
-
-    #
-    # for runtime injection
-    #
-
-    injector: require './injector/injector'
-
