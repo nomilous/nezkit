@@ -3,6 +3,7 @@
 require('nez').objective 'Nezkit',
 
     nimbal: 'http://localhost:10101/'
+    secret: 'SEEKRIT'
 
     class: 'Root Module'
 
