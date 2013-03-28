@@ -2,7 +2,7 @@
 
 require('nez').objective 'Nezkit',
 
-    nimbal: 'https://localhost:10101/'
+    nimbal: 'http://localhost:10101/'
 
     class: 'Root Module'
 
