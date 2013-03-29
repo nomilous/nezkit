@@ -117,11 +117,40 @@ class GitSeed
             targets: @array
             action: 'commit', [message], callback
 
-    pull: (list, callback) -> 
+    pull: (gitSeed, callback) -> 
 
-        unless list 
+        unless gitSeed
+
+            #
+            # seed not specified (only fetch root repo)
+            #
 
             @array[0].pull callback
+            return
+
+        #
+        # seed was specified and now contains the latest
+        # branches/refs for each repo 
+        #
+        # populate target list with all but the root repo
+        # 
+
+        targets = []
+        last    = gitSeed.array.length - 1
+
+        for repo in gitSeed.array[1..last]
+
+            targets.push repo
+
+        #
+        # make calls to Repo.pull() in series
+        # and make the final callback
+        #
+
+        series
+
+            targets: targets
+            action: 'pull', callback
 
 
     noControl: (ex) ->
