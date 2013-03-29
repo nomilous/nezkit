@@ -143,8 +143,8 @@ class GitSeed
             targets.push repo
 
         #
-        # make calls to Repo.pull() in series
-        # and make the final callback
+        # make calls to Repo.pull() in series and 
+        # supply the final callback for passthrough
         #
 
         series
