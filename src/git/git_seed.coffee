@@ -1,21 +1,19 @@
 fs         = require 'fs'
 colors     = require 'colors'  
 GitRepo    = require './git_repo'
-NodeModule = require '../node_module/node_module'
 series     = require('../set/set').series
 
 
 #
 # **class** `GitSeed`
-# *injectable* `nezkit$git$seed`
 #
-# A collection of GitRepo(s) that collectively define 
+# A collection of Packages(s) that collectively define 
 # a deployable unity.
 #
 
 class GitSeed
 
-    @init: (root) -> 
+    @init: (root, PackagePlugin) -> 
 
         arrayOfGitWorkdirs = []
         list  = {}
@@ -34,18 +32,18 @@ class GitSeed
 
         find.on 'end', ->
 
-            repoArray = []
+            packages = []
             seq = 0
 
             for path in arrayOfGitWorkdirs
 
-                repoArray.push NodeModule.init path, seq++, 'npm'
+                packages.push PackagePlugin.init path, seq++
 
-            tree = new GitSeed root, repoArray
+            tree = new GitSeed root, PackagePlugin, packages
             tree.save()
 
 
-    constructor: (@root, list) -> 
+    constructor: (@root, PackagePlugin, list) -> 
 
         @control = "#{@root}/.git-seed"
 
@@ -55,7 +53,7 @@ class GitSeed
 
         else if typeof list == 'undefined'
 
-            @array = @load()
+            @array = @load PackagePlugin
 
     save: -> 
 
@@ -73,7 +71,7 @@ class GitSeed
             throw error
 
 
-    load: -> 
+    load: (PackagePlugin) -> 
 
         try 
 
@@ -91,7 +89,7 @@ class GitSeed
 
             for properties in json
 
-                array.push new GitRepo properties
+                array.push new PackagePlugin properties
 
             return array
 

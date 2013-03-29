@@ -1,4 +1,4 @@
-require('nez').realize 'GitSeed', (GitSeed, test, context, should, NodeModule) -> 
+require('nez').realize 'GitSeed', (GitSeed, test, context, should, Package) -> 
 
     context 'GitSeed.init()', (it) ->
 
@@ -32,9 +32,7 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should, NodeModule) -
             # GitRepos get initialized from found repo paths
             #
 
-            NodeModule.init = (path, seq, manager) -> 
-
-                manager.should.equal 'npm'
+            Package.init = (path, seq) -> 
 
                 #
                 # first found repo should have sequence 0
@@ -59,7 +57,7 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should, NodeModule) -
                     contents.should.match /path/
                     test done
 
-                GitSeed.init 'PATH'
+                GitSeed.init 'PATH', Package
 
 
 
@@ -74,5 +72,5 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should, NodeModule) -
 
                     test done
                     
-                GitSeed.init 'PATH'
+                GitSeed.init 'PATH', Package
 
