@@ -14,10 +14,10 @@ class GitSeed
 
     @init: (root, Plugin) -> 
 
-            Plugin.Package.search root, Plugin, (error, packages) -> 
+        Plugin.Package.search root, Plugin, (error, packages) -> 
 
-                tree = new GitSeed root, Plugin, packages
-                tree.save()
+            tree = new GitSeed root, Plugin, packages
+            tree.save()
 
 
     constructor: (@root, Plugin, list) -> 
@@ -116,6 +116,12 @@ class GitSeed
 
             targets: @array
             action: 'commit', [message], callback
+
+    pull: (list, callback) -> 
+
+        unless list 
+
+            @array[0].pull callback
 
 
     noControl: (ex) ->

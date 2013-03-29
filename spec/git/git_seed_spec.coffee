@@ -59,25 +59,27 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should) ->
                 GitSeed.init 'PATH', Plugin
 
 
-    context 'GitSeed.clone()', (it) -> 
+    context 'GitSeed.clone()', (it, fs) -> 
 
-        it 'clones all repos in the .git-seed file and calls the package manager to install', (done, fs) -> 
+        fs.lstatSync = -> isFile: -> true
+        fs.readFileSync = -> """[
 
-            fs.lstatSync = -> isFile: -> true
-            fs.readFileSync = -> """[
+            {
+                "root": true,
+                "path": ".",
+                "origin": "git@github.com:nomilous/git-seed.git",
+                "branch": "refs/heads/develop",
+                "ref": "ROOT_REPO_REF",
+                "manager": "npm"
+            }
 
-                {
-                    "root": true,
-                    "path": ".",
-                    "origin": "git@github.com:nomilous/git-seed.git",
-                    "branch": "refs/heads/develop",
-                    "ref": "ROOT_REPO_REF"
-                }
+        ]"""
 
-            ]"""
+        Plugin.Package.prototype.clone   = (callback) -> callback null, null
+        Plugin.Package.prototype.install = (callback) -> callback null, 'INSTALLED'
 
-            Plugin.Package.prototype.clone   = (callback) -> callback null, null
-            Plugin.Package.prototype.install = (callback) -> callback null, 'INSTALLED'
+
+        it 'clones all repos in the .git-seed file and calls the package manager to install', (done) -> 
 
             gitSeed = new GitSeed '.', Plugin
 
@@ -85,5 +87,51 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should) ->
 
                 result.should.eql ['INSTALLED']
                 test done
+
+
+    context 'GitSeed.pull()', (it, fs) -> 
+
+        fs.lstatSync = -> isFile: -> true
+        fs.readFileSync = -> """[
+
+            {
+                "root": true,
+                "path": ".",
+                "origin": "git@github.com:nomilous/git-seed.git",
+                "branch": "refs/heads/develop",
+                "ref": "ROOT_REPO_REF",
+                "manager": "npm"
+            },
+            {
+                "root": false,
+                "path": ".",
+                "origin": "git@github.com:nomilous/git-seed-npm.git",
+                "branch": "refs/heads/develop",
+                "ref": "a09a5433e140d6962471a77b541b33857a5473f0",
+                "manager": "npm"
+            }
+
+        ]"""
+
+        Plugin.Package.prototype.install = (callback) -> callback null, 'INSTALLED'
+
+
+        it 'pulls only the root repo if list is not specified', (done) -> 
+
+            paths = []
+
+            Plugin.Package.prototype.pull = (callback) -> 
+
+                paths.push @path
+                callback null, null
+
+
+            gitSeed = new GitSeed '.', Plugin
+
+            gitSeed.pull null, (error, result) -> 
+
+            paths.length.should.equal 1
+            paths[0].should.equal '.'
+            test done
 
 
