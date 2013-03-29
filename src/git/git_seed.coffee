@@ -1,7 +1,8 @@
-fs      = require 'fs'
-colors  = require 'colors'  
-GitRepo = require './git_repo'
-series  = require('../set/set').series
+fs         = require 'fs'
+colors     = require 'colors'  
+GitRepo    = require './git_repo'
+NodeModule = require '../node_module/node_module'
+series     = require('../set/set').series
 
 
 #
@@ -38,7 +39,7 @@ class GitSeed
 
             for path in arrayOfGitWorkdirs
 
-                repoArray.push GitRepo.init path, seq++
+                repoArray.push NodeModule.init path, seq++, 'npm'
 
             tree = new GitSeed root, repoArray
             tree.save()
