@@ -12,7 +12,7 @@ series     = require('../set/set').series
 
 class GitSeed
 
-    @init: (root, PackagePlugin) -> 
+    @init: (root, Plugin) -> 
 
         arrayOfGitWorkdirs = []
         list  = {}
@@ -36,13 +36,13 @@ class GitSeed
 
             for path in arrayOfGitWorkdirs
 
-                packages.push PackagePlugin.init path, seq++
+                packages.push Plugin.Package.init path, seq++
 
-            tree = new GitSeed root, PackagePlugin, packages
+            tree = new GitSeed root, Plugin, packages
             tree.save()
 
 
-    constructor: (@root, PackagePlugin, list) -> 
+    constructor: (@root, Plugin, list) -> 
 
         @control = "#{@root}/.git-seed"
 
@@ -52,7 +52,7 @@ class GitSeed
 
         else if typeof list == 'undefined'
 
-            @array = @load PackagePlugin
+            @array = @load Plugin
 
     save: -> 
 
@@ -70,7 +70,7 @@ class GitSeed
             throw error
 
 
-    load: (PackagePlugin) -> 
+    load: (Plugin) -> 
 
         try 
 
@@ -88,7 +88,7 @@ class GitSeed
 
             for properties in json
 
-                array.push new PackagePlugin properties
+                array.push new Plugin.Package properties
 
             return array
 

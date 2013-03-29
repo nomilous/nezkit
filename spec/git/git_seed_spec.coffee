@@ -1,6 +1,15 @@
 require('nez').realize 'GitSeed', (GitSeed, test, context, should) -> 
 
-    Package = {}
+
+    #
+    # mock package plugin
+    #
+
+    Plugin = 
+
+        Package: {}
+        Shell: {}
+
 
     context 'GitSeed.init()', (it) ->
 
@@ -38,7 +47,7 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should) ->
             # GitRepos get initialized from found repo paths
             #
 
-            Package.init = (path, seq) -> 
+            Plugin.Package.init = (path, seq) -> 
 
                 #
                 # first found repo should have sequence 0
@@ -63,7 +72,7 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should) ->
                     contents.should.match /path/
                     test done
 
-                GitSeed.init 'PATH', Package
+                GitSeed.init 'PATH', Plugin
 
 
 
@@ -78,5 +87,5 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should) ->
 
                     test done
                     
-                GitSeed.init 'PATH', Package
+                GitSeed.init 'PATH', Plugin
 
