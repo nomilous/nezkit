@@ -7,11 +7,11 @@ class GitRepo
 
         return new GitRepo
 
-            root:   seq == 0
-            path:   workDir
-            origin: Git.showOrigin workDir
-            branch: Git.showBranch workDir
-            ref:    Git.showRef workDir
+            root:    seq == 0
+            path:    workDir
+            origin:  Git.showOrigin workDir
+            branch:  Git.showBranch workDir
+            ref:     Git.showRef workDir
 
 
     constructor: (properties) ->
