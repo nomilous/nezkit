@@ -1,6 +1,5 @@
 fs         = require 'fs'
-colors     = require 'colors'  
-GitRepo    = require './git_repo'
+colors     = require 'colors'
 series     = require('../set/set').series
 
 

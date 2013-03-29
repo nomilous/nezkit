@@ -1,6 +1,5 @@
 #
 # **function** `set.series( opts, args, callback )`
-# *Injectable* `nezkit$set$series`
 # 
 # *Usage*
 # 

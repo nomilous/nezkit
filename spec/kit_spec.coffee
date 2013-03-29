@@ -6,7 +6,7 @@ require('nez').realize 'Kit', (Kit, test, it, should) ->
         test done
 
 
-    for toolset in ['shell', 'git', 'npm', 'coffee', 'set']
+    for toolset in ['coffee', 'set']
 
         #
         # a possibly inappropriate approach to testing?
@@ -16,3 +16,9 @@ require('nez').realize 'Kit', (Kit, test, it, should) ->
 
             Kit[toolset].should.equal require "../lib/#{toolset}/#{toolset}"
             test done
+
+    it 'exports the (git) seed', (done) -> 
+
+        Kit.seed.should.equal require '../lib/git/git_seed'
+        test done
+

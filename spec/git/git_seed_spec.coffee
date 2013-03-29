@@ -1,8 +1,14 @@
-require('nez').realize 'GitSeed', (GitSeed, test, context, should, Package) -> 
+require('nez').realize 'GitSeed', (GitSeed, test, context, should) -> 
+
+    Package = {}
 
     context 'GitSeed.init()', (it) ->
 
         it 'searches for git repos', (And, findit) -> 
+
+            #
+            # TODO: move find into git-seed-core.git support
+            #
 
             #
             # mock search
