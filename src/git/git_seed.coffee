@@ -84,13 +84,36 @@ class GitSeed
     clone: (callback) -> 
 
         series
+
             targets: @array
-            action: 'clone', callback
+            action: 'clone', (error, result) => 
+
+                #
+                # all clones done, callback and exit if error
+                # 
+
+                if error
+
+                    callback error, results
+                    return
+
+                #
+                # no errors, perform package manager install 
+                # and callback the final result
+                #
+
+                # TODO: commandline -no-auto-install to disable this
+
+                series
+
+                    targets: @array
+                    action: 'install', callback
 
 
     commit: (message, callback) ->
 
         series
+
             targets: @array
             action: 'commit', [message], callback
 
