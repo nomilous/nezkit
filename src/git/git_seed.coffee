@@ -14,32 +14,10 @@ class GitSeed
 
     @init: (root, Plugin) -> 
 
-        arrayOfGitWorkdirs = []
-        list  = {}
-        find  = require('findit').find root
+            Plugin.Package.search root, Plugin, (error, packages) -> 
 
-        find.on 'directory', (dir, stat) -> 
-
-            if match = dir.match /(.*)\/.git\//
-
-                return unless typeof list[match[1]] == 'undefined'
-
-                console.log '(found)'.green, "#{match[1]}/.git"
-                list[match[1]] = 1
-                arrayOfGitWorkdirs.push match[1]
-
-
-        find.on 'end', ->
-
-            packages = []
-            seq = 0
-
-            for path in arrayOfGitWorkdirs
-
-                packages.push Plugin.Package.init path, seq++
-
-            tree = new GitSeed root, Plugin, packages
-            tree.save()
+                tree = new GitSeed root, Plugin, packages
+                tree.save()
 
 
     constructor: (@root, Plugin, list) -> 
