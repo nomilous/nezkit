@@ -12,13 +12,8 @@
   "main": "lib/kit",
   "repository": "git@github.com:nomilous/nezkit.git",
   "dependencies": {
-    "async": "~0.2.6",
     "colors": "~0.6.0-1",
-    "findit": "~0.1.2",
-    "exec-sync": "~0.1.5",
-    "inflection": "~1.2.5",
-    "wrench": "~1.4.4",
-    "fing": "0.0.4"
+    "inflection": "~1.2.5"
   },
   "devDependencies": {
     "nez": "0.0.7",

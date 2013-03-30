@@ -1,50 +1,26 @@
-fs      = require 'fs'
-colors  = require 'colors'  
-GitRepo = require './git_repo'
-series  = require('../set/set').series
+fs         = require 'fs'
+colors     = require 'colors'
+series     = require('../set/set').series
 
 
 #
 # **class** `GitSeed`
-# *injectable* `nezkit$git$seed`
 #
-# A collection of GitRepo(s) that collectively define 
+# A collection of Packages(s) that collectively define 
 # a deployable unity.
 #
 
 class GitSeed
 
-    @init: (root) -> 
+    @init: (root, Plugin) -> 
 
-        arrayOfGitWorkdirs = []
-        list  = {}
-        find  = require('findit').find root
+        Plugin.Package.search root, Plugin, (error, packages) -> 
 
-        find.on 'directory', (dir, stat) -> 
-
-            if match = dir.match /(.*)\/.git\//
-
-                return unless typeof list[match[1]] == 'undefined'
-
-                console.log '(found)'.green, "#{match[1]}/.git"
-                list[match[1]] = 1
-                arrayOfGitWorkdirs.push match[1]
-
-
-        find.on 'end', ->
-
-            repoArray = []
-            seq = 0
-
-            for path in arrayOfGitWorkdirs
-
-                repoArray.push GitRepo.init path, seq++
-
-            tree = new GitSeed root, repoArray
+            tree = new GitSeed root, Plugin, packages
             tree.save()
 
 
-    constructor: (@root, list) -> 
+    constructor: (@root, Plugin, list) -> 
 
         @control = "#{@root}/.git-seed"
 
@@ -54,7 +30,7 @@ class GitSeed
 
         else if typeof list == 'undefined'
 
-            @array = @load()
+            @array = @load Plugin
 
     save: -> 
 
@@ -72,7 +48,7 @@ class GitSeed
             throw error
 
 
-    load: -> 
+    load: (Plugin) -> 
 
         try 
 
@@ -90,7 +66,7 @@ class GitSeed
 
             for properties in json
 
-                array.push new GitRepo properties
+                array.push new Plugin.Package properties
 
             return array
 
@@ -108,15 +84,87 @@ class GitSeed
     clone: (callback) -> 
 
         series
+
             targets: @array
-            action: 'clone', callback
+            action: 'clone', (error, result) => 
+
+                #
+                # all clones done, callback and exit if error
+                # 
+
+                if error
+
+                    callback error, results
+                    return
+
+                #
+                # no errors, perform package manager install 
+                # and callback the final result
+                #
+
+                # TODO: commandline -no-auto-install to disable this
+
+                series
+
+                    targets: @array
+                    action: 'install', callback
 
 
     commit: (message, callback) ->
 
         series
+
             targets: @array
             action: 'commit', [message], callback
+
+    pull: (gitSeed, callback) -> 
+
+        unless gitSeed
+
+            #
+            # seed not specified (only fetch root repo)
+            #
+
+            @array[0].pull callback
+            return
+
+        #
+        # seed was specified and now contains the latest
+        # branches/refs for each repo 
+        #
+        # populate target list with all but the root repo
+        # 
+
+        targets = []
+        last    = gitSeed.array.length - 1
+
+        for repo in gitSeed.array[1..last]
+
+            targets.push repo
+
+        #
+        # make calls to Repo.pull() in series and 
+        # supply the final callback for passthrough
+        #
+
+        series
+
+            targets: targets
+            action: 'pull', (error, result) => 
+
+                if error
+
+                    callback error, results
+                    return
+
+                #
+                # TODO: only install where pull was necessary
+                #
+
+                series
+
+                    targets: @array
+                    action: 'install', callback
 
 
     noControl: (ex) ->
