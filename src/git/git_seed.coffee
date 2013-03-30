@@ -158,15 +158,13 @@ class GitSeed
                     return
 
                 #
-                # TODO: only install where pull was necessary changed
+                # TODO: only install where pull was necessary
                 #
 
                 series
 
                     targets: @array
                     action: 'install', callback
-
-
 
 
     noControl: (ex) ->
