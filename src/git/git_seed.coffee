@@ -150,7 +150,23 @@ class GitSeed
         series
 
             targets: targets
-            action: 'pull', callback
+            action: 'pull', (error, result) => 
+
+                if error
+
+                    callback error, results
+                    return
+
+                #
+                # TODO: only install where pull was necessary changed
+                #
+
+                series
+
+                    targets: @array
+                    action: 'install', callback
+
+
 
 
     noControl: (ex) ->
