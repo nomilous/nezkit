@@ -1,4 +1,5 @@
 fs         = require 'fs'
+console.log 'remove colors'
 colors     = require 'colors'
 series     = require('../set/set').series
 
@@ -20,11 +21,13 @@ class GitSeed
 
         Plugin.Package.search root, Plugin, deferral, (error, packages) -> 
 
+            console.log packages
+
             tree = new GitSeed root, Plugin, deferral, packages
             tree.save()
 
 
-    constructor: (@root, Plugin, @deferral, list) -> 
+    constructor: (@root, Plugin, @deferral, array) -> 
 
         if (
 
@@ -36,11 +39,11 @@ class GitSeed
 
         @control = "#{@root}/.git-seed"
 
-        if list instanceof Array
+        if array instanceof Array
 
-            @array = list
+            @array = array
 
-        else if typeof list == 'undefined'
+        else if typeof array == 'undefined'
 
             @array = @load Plugin
 
