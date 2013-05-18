@@ -1,5 +1,14 @@
-require('nez').realize 'GitSeed', (GitSeed, test, context, should) -> 
+require('nez').realize 'GitSeed', (GitSeed, test, context, should, findit, fs) -> 
 
+    #
+    # mock deferral
+    #
+
+    deferral = 
+
+        resolve: -> 
+        reject:  -> 
+        notify:  -> 
 
     #
     # mock package plugin
@@ -16,7 +25,7 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should) ->
                     @[key] = properties[key]
 
 
-            @search = (root, Plugin, callback) -> 
+            @search = (root, Plugin, deferral, callback) -> 
 
                 callback null, [
 
@@ -31,16 +40,16 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should) ->
 
     context 'GitSeed.init()', (it) ->
 
-        it 'searches for git repos', (And, findit) -> 
+        it 'searches for git repos', (And) -> 
 
-            And 'saves the .git-seed file', (done, fs) ->
+            And 'saves the .git-seed file', (done) ->
 
                 fs.writeFileSync = (path, contents) -> 
 
                     path.should.equal 'PATH/.git-seed'
                     test done
 
-                GitSeed.init 'PATH', Plugin
+                GitSeed.init 'PATH', Plugin, deferral
 
 
             And 'initializes the GitSeed constituent GitRepo(s) array', (done) ->
@@ -56,10 +65,10 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should) ->
 
                     test done
                     
-                GitSeed.init 'PATH', Plugin
+                GitSeed.init 'PATH', Plugin, deferral
 
 
-    context 'GitSeed.clone()', (it, fs) -> 
+    context 'GitSeed.clone()', (it) -> 
 
         fs.lstatSync = -> isFile: -> true
         fs.readFileSync = -> """[
@@ -98,7 +107,7 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should) ->
 
         it 'clones all repos in the .git-seed file and calls the package manager to install', (done) -> 
 
-            gitSeed = new GitSeed '.', Plugin
+            gitSeed = new GitSeed '.', Plugin, deferral
 
             gitSeed.clone (error, result) -> 
 
@@ -113,7 +122,7 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should) ->
                 test done
 
 
-    context 'GitSeed.pull()', (it, fs) -> 
+    context 'GitSeed.pull()', (it) -> 
 
         fs.lstatSync = -> isFile: -> true
         fs.readFileSync = -> """[
@@ -159,7 +168,7 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should) ->
                 callback null, null
 
 
-            gitSeed = new GitSeed '.', Plugin
+            gitSeed = new GitSeed '.', Plugin, deferral
 
             gitSeed.pull null, (error, result) -> 
 
@@ -178,7 +187,7 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should) ->
                 callback null, null
 
 
-            gitSeed = new GitSeed '.', Plugin
+            gitSeed = new GitSeed '.', Plugin, deferral
 
             gitSeed.pull gitSeed, (error, result) -> 
 

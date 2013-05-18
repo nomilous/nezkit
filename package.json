@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "nez": "0.0.7",
-    "should": "~1.2.2"
+    "should": "~1.2.2",
+    "findit": "~0.1.2"
   }
 }

@@ -2,7 +2,6 @@ fs         = require 'fs'
 colors     = require 'colors'
 series     = require('../set/set').series
 
-
 #
 # **class** `GitSeed`
 #
@@ -12,15 +11,28 @@ series     = require('../set/set').series
 
 class GitSeed
 
-    @init: (root, Plugin) -> 
+    @init: (root, Plugin, deferral) -> 
 
-        Plugin.Package.search root, Plugin, (error, packages) -> 
+        #
+        # deferral as promise object
+        # should define resolve(), reject() and notify()
+        #
 
-            tree = new GitSeed root, Plugin, packages
+        Plugin.Package.search root, Plugin, deferral, (error, packages) -> 
+
+            tree = new GitSeed root, Plugin, deferral, packages
             tree.save()
 
 
-    constructor: (@root, Plugin, list) -> 
+    constructor: (@root, Plugin, @deferral, list) -> 
+
+        if (
+
+            typeof @deferral.resolve != 'function' or 
+            typeof @deferral.reject != 'function' or
+            typeof @deferral.notify != 'function'
+
+        ) then throw new Error "#{ @constructor.name } requires deferral"
 
         @control = "#{@root}/.git-seed"
 
