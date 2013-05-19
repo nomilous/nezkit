@@ -99,5 +99,23 @@ class GitSeed
             repo.getStatus @deferral
 
 
+    clone: (callback) -> 
+
+        cloneAll = []
+        targets  = []
+
+        for repo in @array
+
+            targets.unshift repo
+            cloneAll.push -> targets.pop().clone()
+
+        sequence( cloneAll ).then(
+
+            success = -> callback()
+            error = -> 
+
+        )
+
+
 
 module.exports = GitSeed
