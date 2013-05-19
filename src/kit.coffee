@@ -8,13 +8,6 @@ module.exports = kit =
 
 
     #
-    # for interactions with a set of `objects`
-    #
-
-    set: require './set/set'
-
-
-    #
     # for interactions with a git-seed
     #
 

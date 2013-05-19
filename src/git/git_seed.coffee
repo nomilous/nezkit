@@ -1,7 +1,7 @@
 fs         = require 'fs'
 console.log 'remove colors'
 colors     = require 'colors'
-series     = require('../set/set').series
+sequence   = require 'when/sequence' 
 
 #
 # **class** `GitSeed`
@@ -97,105 +97,6 @@ class GitSeed
         for repo in @array
 
             repo.getStatus @deferral
-
-
-    clone: (callback) -> 
-
-        actionArgs = [@deferral]
-
-        series
-
-            targets: @array
-            action: 'clone', actionArgs, (error, result) => 
-
-                #
-                # all clones done, callback and exit if error
-                # 
-
-                if error
-
-                    callback error, results
-                    return
-
-                #
-                # no errors, perform package manager install 
-                # and callback the final result
-                #
-
-                # TODO: commandline -no-auto-install to disable this
-
-                console.log 'run package manager install after all clones are done'
-
-                # series
-
-                #     targets: @array
-                #     action: 'install', callback
-
-
-    commit: (message, callback) ->
-
-        series
-
-            targets: @array
-            action: 'commit', [message], callback
-
-    pull: (gitSeed, callback) -> 
-
-        unless gitSeed
-
-            #
-            # seed not specified (only fetch root repo)
-            #
-
-            @array[0].pull callback
-            return
-
-        #
-        # seed was specified and now contains the latest
-        # branches/refs for each repo 
-        #
-        # populate target list with all but the root repo
-        # 
-
-        targets = []
-        last    = gitSeed.array.length - 1
-
-        for repo in gitSeed.array[1..last]
-
-            targets.push repo
-
-        #
-        # make calls to Repo.pull() in series and 
-        # supply the final callback for passthrough
-        #
-
-        series
-
-            targets: targets
-            action: 'pull', (error, result) => 
-
-                if error
-
-                    callback error, results
-                    return
-
-                #
-                # TODO: only install where pull was necessary
-                #
-
-                series
-
-                    targets: @array
-                    action: 'install', callback
-
-
-    noControl: (ex) ->
-
-        throw error = ex || new Error( 
-
-            'Expected control file, not this:' + @control
-
-        )
 
 
 
