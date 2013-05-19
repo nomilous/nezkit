@@ -101,10 +101,12 @@ class GitSeed
 
     clone: (callback) -> 
 
+        actionArgs = [@deferral]
+
         series
 
             targets: @array
-            action: 'clone', (error, result) => 
+            action: 'clone', actionArgs, (error, result) => 
 
                 #
                 # all clones done, callback and exit if error
@@ -122,10 +124,12 @@ class GitSeed
 
                 # TODO: commandline -no-auto-install to disable this
 
-                series
+                console.log 'run package manager install after all clones are done'
 
-                    targets: @array
-                    action: 'install', callback
+                # series
+
+                #     targets: @array
+                #     action: 'install', callback
 
 
     commit: (message, callback) ->

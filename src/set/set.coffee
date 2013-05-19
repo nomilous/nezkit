@@ -81,7 +81,7 @@ set =
         for target in opts.targets
 
             targets.push target
-
+            
 
         #
         # callback resursion
