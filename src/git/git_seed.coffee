@@ -21,8 +21,6 @@ class GitSeed
 
         Plugin.Package.search root, Plugin, deferral, (error, packages) -> 
 
-            console.log packages
-
             tree = new GitSeed root, Plugin, deferral, packages
             tree.save()
 
@@ -40,6 +38,10 @@ class GitSeed
         @control = "#{@root}/.git-seed"
 
         if array instanceof Array
+
+            for repo in array
+
+                repo.ref = 'ROOT_REPO_REF' if repo.root
 
             @array = array
 
