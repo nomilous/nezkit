@@ -95,7 +95,8 @@ class GitSeed
     status: -> 
 
         for repo in @array
-            repo.printStatus()
+
+            repo.getStatus @deferral
 
 
     clone: (callback) -> 
