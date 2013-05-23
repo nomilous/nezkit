@@ -129,12 +129,6 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should, findit, fs) -
                 test done
 
 
-        it 'calls the package manager to install after all clones', (done) -> 
-
-            true.should.equal false
-            test done
-
-
     # context 'GitSeed.pull()', (it) -> 
 
     #     fs.lstatSync = -> isFile: -> true

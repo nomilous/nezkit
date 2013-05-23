@@ -2,6 +2,7 @@ fs         = require 'fs'
 console.log 'remove colors'
 colors     = require 'colors'
 sequence   = require 'when/sequence' 
+w          = require 'when'
 
 #
 # **class** `GitSeed`
@@ -92,30 +93,83 @@ class GitSeed
             throw "error loading control file: #{@control} #{error.toString()}"
 
 
-    status: -> 
-
-        for repo in @array
-
-            repo.getStatus @deferral
 
 
-    clone: (callback) -> 
 
-        cloneAll = []
-        targets  = []
 
-        for repo in @array
 
-            targets.unshift repo
-            cloneAll.push -> targets.pop().clone()
 
-        sequence( cloneAll ).then(
 
-            success = -> callback()
-            error = -> 
 
-        )
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # status: -> 
+
+    #     for repo in @array
+
+    #         repo.getStatus @deferral
+
+
+
+
+
+    # clone: (callback) -> 
+
+    #     cloneAll = []
+    #     targets  = []
+
+    #     for repo in @array
+
+    #         # targets.unshift repo
+    #         # cloneAll.push targets.pop().clone()
+    #         cloneAll.push -> 
+
+    #             console.log 'clone'
+    #             defer = w.defer()
+    #             targets.pop().clone defer
+    #             defer.promise
+
+    #     sequence( cloneAll ).then(
+
+    #         success = (result) => @install callback
+    #         failed = (reason) -> callback reason 
+
+    #     )
+
+    # install: (callback) -> 
+
+    #     installAll = []
+    #     targets    = []
+
+    #     for repo in @array
+
+    #         targets.unshift repo
+    #         installAll.push -> targets.pop().install()
+
+
+    #     sequence( installAll ).then(
+
+    #         success = (result) -> callback result
+    #         failed = (reason) -> callback reason 
+
+    #     )
 
 
 module.exports = GitSeed
