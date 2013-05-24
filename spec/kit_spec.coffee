@@ -6,7 +6,7 @@ require('nez').realize 'Kit', (Kit, test, it, should) ->
         test done
 
 
-    for toolset in ['coffee', 'set']
+    for toolset in ['coffee']
 
         #
         # a possibly inappropriate approach to testing?

@@ -1,3 +1,5 @@
+w = require 'when'
+
 require('nez').realize 'GitSeed', (GitSeed, test, context, should, findit, fs) -> 
 
     #
@@ -8,7 +10,12 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should, findit, fs) -
 
         resolve: -> 
         reject:  -> 
-        notify:  -> 
+        notify: ->
+
+
+    deferral.notify.info = 
+        good: ->
+        bad: -> 
 
     #
     # mock package plugin
@@ -68,65 +75,102 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should, findit, fs) -
                 GitSeed.init 'PATH', Plugin, deferral
 
 
-    context 'GitSeed.clone()', (it) -> 
+    context 'GitSeed.status()', (it) -> 
 
-        fs.lstatSync = -> isFile: -> true
-        fs.readFileSync = -> """[
+        inputRepoArray = [
+            { path: '.' }
+            { path: './node_modules/submod'}
+        ]
+        GitSeed.prototype.load = -> return inputRepoArray
 
-            {
-                "root": true,
-                "path": ".",
-                "origin": "git@github.com:nomilous/git-seed.git",
-                "branch": "refs/heads/develop",
-                "ref": "ROOT_REPO_REF",
-                "manager": "npm"
-            },
-            {
-                "root": false,
-                "path": "./node_modules/git-seed-npm",
-                "origin": "git@github.com:nomilous/git-seed-npm.git",
-                "branch": "refs/heads/master",
-                "ref": "a09a5433e140d6962471a77b541b33857a5473f0",
-                "manager": "npm"
-            },
-            {
-                "root": false,
-                "path": "./node_modules/git-seed-npm/node_modules/git-seed-core",
-                "origin": "git@github.com:nomilous/git-seed-core.git",
-                "branch": "refs/heads/master",
-                "ref": "c69ec4b7a687f3a3dd695bf4f50e2d3d5c6c624f",
-                "manager": "npm"
-            }
+        
+        it 'calls getStatus on the Package plugin for every repo in the seed file', (done) -> 
 
+            actsOnRepoArray = [] 
 
-        ]"""
+            seed = new GitSeed '.', {
 
-        cloned = []
-        Plugin.Package.prototype.clone   = (callback) -> cloned.push @path
+                #
+                # mock package plugin
+                #
 
-        it 'clones all repos in the .git-seed file in order', (done) -> 
+                Package: 
 
-            gitSeed = new GitSeed '.', Plugin, deferral
+                    getStatus: (repo, defer, callback) -> 
 
-            gitSeed.clone (error, result) -> 
+                        actsOnRepoArray.push repo
+                        callback null, {}
 
-                cloned.should.eql [
+            }, deferral
 
-                    '.'
-                    './node_modules/git-seed-npm'
-                    './node_modules/git-seed-npm/node_modules/git-seed-core'
-                    
-                ]
-
-                # result.should.eql [ 
-
-                #     'INSTALLED @ .'
-                #     'INSTALLED @ ./node_modules/git-seed-npm'
-                #     'INSTALLED @ ./node_modules/git-seed-npm/node_modules/git-seed-core'
-
-                # ]
-
+            seed.status -> 
+            
+                actsOnRepoArray.should.eql inputRepoArray
                 test done
+
+
+
+
+
+    # context 'GitSeed.clone()', (it) -> 
+
+    #     fs.lstatSync = -> isFile: -> true
+    #     fs.readFileSync = -> """[
+
+    #         {
+    #             "root": true,
+    #             "path": ".",
+    #             "origin": "git@github.com:nomilous/git-seed.git",
+    #             "branch": "refs/heads/develop",
+    #             "ref": "ROOT_REPO_REF",
+    #             "manager": "npm"
+    #         },
+    #         {
+    #             "root": false,
+    #             "path": "./node_modules/git-seed-npm",
+    #             "origin": "git@github.com:nomilous/git-seed-npm.git",
+    #             "branch": "refs/heads/master",
+    #             "ref": "a09a5433e140d6962471a77b541b33857a5473f0",
+    #             "manager": "npm"
+    #         },
+    #         {
+    #             "root": false,
+    #             "path": "./node_modules/git-seed-npm/node_modules/git-seed-core",
+    #             "origin": "git@github.com:nomilous/git-seed-core.git",
+    #             "branch": "refs/heads/master",
+    #             "ref": "c69ec4b7a687f3a3dd695bf4f50e2d3d5c6c624f",
+    #             "manager": "npm"
+    #         }
+
+
+    #     ]"""
+
+    #     cloned = []
+    #     Plugin.Package.prototype.clone   = (callback) -> cloned.push @path
+
+    #     it 'clones all repos in the .git-seed file in order', (done) -> 
+
+    #         gitSeed = new GitSeed '.', Plugin, deferral
+
+    #         gitSeed.clone (error, result) -> 
+
+    #             cloned.should.eql [
+
+    #                 '.'
+    #                 './node_modules/git-seed-npm'
+    #                 './node_modules/git-seed-npm/node_modules/git-seed-core'
+                    
+    #             ]
+
+    #             # result.should.eql [ 
+
+    #             #     'INSTALLED @ .'
+    #             #     'INSTALLED @ ./node_modules/git-seed-npm'
+    #             #     'INSTALLED @ ./node_modules/git-seed-npm/node_modules/git-seed-core'
+
+    #             # ]
+
+    #             test done
 
 
     # context 'GitSeed.pull()', (it) -> 

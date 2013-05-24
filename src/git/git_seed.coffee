@@ -1,8 +1,6 @@
 fs         = require 'fs'
-console.log 'remove colors'
-colors     = require 'colors'
-sequence   = require 'when/sequence' 
-w          = require 'when'
+sequence   = require 'when/sequence'
+nodefn     = require 'when/node/function'
 
 #
 # **class** `GitSeed`
@@ -26,7 +24,7 @@ class GitSeed
             tree.save()
 
 
-    constructor: (@root, Plugin, @deferral, array) -> 
+    constructor: (@root, @Plugin, @deferral, array) -> 
 
         if (
 
@@ -58,11 +56,11 @@ class GitSeed
 
                 JSON.stringify( @array, null, 2 )
 
-            console.log '(write)'.green, @control
+            @deferral.notify.info.good 'saved seed', @control
 
         catch error
 
-            console.log error.red
+            @deferral.notify.info.bad 'save seed failed', error.toString()
             throw error
 
 
@@ -74,7 +72,7 @@ class GitSeed
 
         catch error
 
-            throw "explected control file: #{@control}"
+            throw "expected control file: #{@control}"
 
         try
 
@@ -94,40 +92,22 @@ class GitSeed
 
 
 
+    status: (callback) -> 
 
+        targs = []
+        tasks = sequence( for repo in @array
 
+            targs.unshift repo
+            => nodefn.call @Plugin.Package.getStatus, targs.pop(), @deferral
 
+        )
 
+        tasks.then(
 
+            success = (results) -> callback null, results
+            failed  = (error)   -> callback error
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # status: -> 
-
-    #     for repo in @array
-
-    #         repo.getStatus @deferral
-
-
-
+        )
 
 
     # clone: (callback) -> 
