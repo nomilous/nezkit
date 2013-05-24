@@ -91,14 +91,18 @@ class GitSeed
             throw "error loading control file: #{@control} #{error.toString()}"
 
 
+    status: (callback) -> @action 'status', callback
+    clone:  (callback) -> @action 'clone',  callback
 
-    status: (callback) -> 
+
+
+    action: (name, callback) -> 
 
         targs = []
         tasks = sequence( for repo in @array
 
             targs.unshift repo
-            => nodefn.call @Plugin.Package.getStatus, targs.pop(), @deferral
+            => nodefn.call @Plugin.Package[name], targs.pop(), @deferral
 
         )
 
@@ -110,7 +114,6 @@ class GitSeed
         )
 
 
-    # clone: (callback) -> 
 
     #     cloneAll = []
     #     targets  = []

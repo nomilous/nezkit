@@ -1,5 +1,3 @@
-w = require 'when'
-
 require('nez').realize 'GitSeed', (GitSeed, test, context, should, findit, fs) -> 
 
     #
