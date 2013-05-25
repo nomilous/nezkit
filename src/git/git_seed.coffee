@@ -101,9 +101,12 @@ class GitSeed
 
             #
             # new seed file generated is elevated to an event (notice)
+            # it includes the seed itself at event.content.seed
             #
 
-            @superTask.notify.event.good 'seed update', @control
+            @superTask.notify.event.good 'seed update', 
+                description: "wrote file: #{@control}"
+                seed: @array
 
         catch error
 
