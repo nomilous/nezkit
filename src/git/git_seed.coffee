@@ -143,6 +143,7 @@ class GitSeed
 
         event = superTask.notify.event
         info  = superTask.notify.info
+        moo   = 1
 
         succeed = (results) -> 
 
