@@ -45,11 +45,16 @@ class GitSeed
     #     ...all the way up the Chairman's iKnow
     # 
     # 
-    # * superTask.resolve() - Will be called by this process on success
-    # * superTask.reject() - Will be called by this process on failure
-    # * superTask.notify[] - Will be used to communicate status updates into the superTask 
+    # * superTask.resolve() - superTask has succeeded
+    # * superTask.reject()  - superTask has failed permanently
+    # * superTask.notify[] -  to send status updates into the superTask 
     # 
-    # **superTask.notify** must be a configured instance of [notice](https://github.com/nomilous/notice)
+    # #### Notes
+    # 
+    # * superTask will not be resolved() or rejected() by git-seed, that is the
+    #   responsibility of that caller.
+    # * superTask.notify[] **must** be a configured instance of [notice](https://github.com/nomilous/notice)
+    # 
     # 
 
     @init: (root, Plugin, superTask) -> 
@@ -154,7 +159,7 @@ class GitSeed
 
         sequence( [
 
-            => nodefn.call GitSeed.action, 'clone', @Plugin.Package, @array, @superTask
+            => nodefn.call GitSeed.action, 'clone',   @Plugin.Package, @array, @superTask
             => nodefn.call GitSeed.action, 'install', @Plugin.Package, @array, @superTask
 
         ] ).then( 
