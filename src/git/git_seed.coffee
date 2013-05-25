@@ -4,6 +4,7 @@ nodefn     = require 'when/node/function'
 
 #
 # **class** `GitSeed`
+# ===================
 #
 # A collection of Packages(s) that collectively define 
 # a deployable unity.
@@ -11,16 +12,58 @@ nodefn     = require 'when/node/function'
 
 class GitSeed
 
-    @init: (root, Plugin, deferral) -> 
+
+    #
+    # GitSeed.init(root, Plugin, superTask)
+    # -------------------------------------
+    # 
+    # Assembles the git-seed control file
+    # 
+    # ### root 
+    # 
+    # The directory containing the root repository.
+    # 
+    # 
+    # ### Plugin
+    # 
+    # Should define Plugin.Package as the definition of an implementation that extends the 
+    # baseclass [git-seed-core.GitRepo](https://github.com/nomilous/git-seed-core/blob/master/src/git_repo.coffee) 
+    # and overrides the [install class method](https://github.com/nomilous/git-seed-npm/blob/master/src/npm_package.coffee) to perform any
+    # post seed package manager activities (eg. npm install).
+    # 
+    # 
+    # ### superTask
+    # 
+    # As the [promise] made by the parent process (or its parent, or it'sit's parent, or... 
+    # 
+    #    As the yank!
+    # 
+    #       For a chain that could escalate...  
+    #    
+    #             IF NOTH!NG GOES WELL
+    #  
+    #     ...all the way up the Chairman's iKnow
+    # 
+    # 
+    # * superTask.resolve() - Will be called by this process on success
+    # * superTask.reject() - Will be called by this process on failure
+    # * superTask.notify[] - Will be used to communicate status updates into the superTask 
+    # 
+    # **superTask.notify** must be a configured instance of [notice](https://github.com/nomilous/notice)
+    # 
+
+    @init: (root, Plugin, superTask) -> 
 
         #
         # deferral as promise object
-        # should define resolve(), reject() and notify()
+        # should define deferral.resolve(), deferral.reject() and deferral.notify()
         #
+        # deferral.notify() must be an instance of [notice]()
+        # 
 
-        Plugin.Package.search root, Plugin, deferral, (error, packages) -> 
+        Plugin.Package.search root, Plugin, superTask, (error, packages) -> 
 
-            tree = new GitSeed root, Plugin, deferral, packages
+            tree = new GitSeed root, Plugin, superTask, packages
             tree.save()
 
 
