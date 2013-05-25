@@ -185,7 +185,7 @@ class GitSeed
 
             switch action
 
-                when 'clone' then event.good "seed #{action}", 'success'
+                when 'clone','install' then event.good "seed #{action}", 'success'
                 else info.good "seed #{action}", 'success'
 
             info.good  "seed #{action} results", results: results
@@ -195,7 +195,7 @@ class GitSeed
 
             switch action
 
-                when 'clone' then event.bad "seed #{action}", 'failed'
+                when 'clone','install' then event.bad "seed #{action}", 'failed'
                 else info.bad "seed #{action}", 'failed'
 
             info.bad  "seed #{action} error", error: error
