@@ -106,9 +106,7 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should, findit, fs) -
             }, deferral
 
             seed.status (error, result) -> 
-
-                console.log
-
+                console.log 'gitSeed.status() result:', result
                 actsOnRepoArray.should.eql inputRepoArray
                 test done
 

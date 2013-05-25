@@ -67,15 +67,15 @@ class GitSeed
             tree.save()
 
 
-    constructor: (@root, @Plugin, @deferral, array) -> 
+    constructor: (@root, @Plugin, @superTask, array) -> 
 
         if (
 
-            typeof @deferral.resolve != 'function' or 
-            typeof @deferral.reject != 'function' or
-            typeof @deferral.notify != 'function'
+            typeof @superTask.resolve != 'function' or 
+            typeof @superTask.reject != 'function' or
+            typeof @superTask.notify != 'function'
 
-        ) then throw new Error "#{ @constructor.name } requires deferral"
+        ) then throw new Error "#{ @constructor.name } requires superTask as deferral"
 
         @control = "#{@root}/.git-seed"
 
@@ -99,11 +99,11 @@ class GitSeed
 
                 JSON.stringify( @array, null, 2 )
 
-            @deferral.notify.info.good 'saved seed', @control
+            @superTask.notify.info.good 'saved seed', @control
 
         catch error
 
-            @deferral.notify.info.bad 'save seed failed', error.toString()
+            @superTask.notify.info.bad 'save seed failed', error.toString()
             throw error
 
 
@@ -134,15 +134,15 @@ class GitSeed
             throw "error loading control file: #{@control} #{error.toString()}"
 
 
-    status: (callback) -> @action 'status', callback
-    clone:  (callback) -> @action 'clone',  callback
+    status: (callback) -> GitSeed.action 'status', @Plugin.Package, @array, @superTask, callback
+    clone:  (callback) -> #@action 'clone',  callback
 
 
 
-    action: (action, callback) -> 
+    @action: (action, Repo, repoArray, superTask, callback) -> 
 
-        event = @deferral.notify.event
-        info  = @deferral.notify.info
+        event = superTask.notify.event
+        info  = superTask.notify.info
 
         succeed = (results) -> 
 
@@ -172,10 +172,10 @@ class GitSeed
         targs = []
         sequence( 
 
-            for repo in @array
+            for repo in repoArray
 
                 targs.unshift repo
-                => nodefn.call @Plugin.Package[action], targs.pop(), @deferral
+                -> nodefn.call Repo[action], targs.pop(), superTask
 
         ).then succeed, fail
 
