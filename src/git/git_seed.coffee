@@ -51,9 +51,11 @@ class GitSeed
     # 
     # #### Notes
     # 
-    # * superTask will not be resolved() or rejected() by git-seed, that is the
-    #   responsibility of that caller.
-    # * superTask.notify[] **must** be a configured instance of [notice](https://github.com/nomilous/notice)
+    # * superTask will not be resolved() or rejected() by git-seed, that is a
+    #   responsibility of whichever higher entity in the objective heirarchy
+    #   made the call to git-seed.
+    # * superTask.notify[] **must** be a configured instance of 
+    #   [notice](https://github.com/nomilous/notice)
     # 
     # 
 
