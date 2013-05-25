@@ -99,11 +99,15 @@ class GitSeed
 
                 JSON.stringify( @array, null, 2 )
 
-            @superTask.notify.info.good 'saved seed', @control
+            #
+            # new seed file generated is elevated to an event (notice)
+            #
+
+            @superTask.notify.event.good 'seed update', @control
 
         catch error
 
-            @superTask.notify.info.bad 'save seed failed', error.toString()
+            @superTask.notify.info.bad 'seed update failed', error.toString()
             throw error
 
 
