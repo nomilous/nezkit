@@ -96,22 +96,45 @@ class GitSeed
 
 
 
-    action: (name, callback) -> 
+    action: (action, callback) -> 
+
+        event = @deferral.notify.event
+        info  = @deferral.notify.info
+
+        succeed = (results) -> 
+
+            #
+            # a successful seed clone is elevated
+            # to an event (notice)
+            # 
+
+            switch action
+
+                when 'clone' then event.good "seed #{action}", 'success'
+                else info.good "seed #{action}", 'success'
+
+            info.good  "seed #{action} results", results: results
+            callback null, results
+
+        fail   = (error)   -> 
+
+            switch action
+
+                when 'clone' then event.bad "seed #{action}", 'failed'
+                else info.bad "seed #{action}", 'failed'
+
+            info.bad  "seed #{action} error", error: error
+            callback error
 
         targs = []
-        tasks = sequence( for repo in @array
+        sequence( 
 
-            targs.unshift repo
-            => nodefn.call @Plugin.Package[name], targs.pop(), @deferral
+            for repo in @array
 
-        )
+                targs.unshift repo
+                => nodefn.call @Plugin.Package[action], targs.pop(), @deferral
 
-        tasks.then(
-
-            success = (results) -> callback null, results
-            failed  = (error)   -> callback error
-
-        )
+        ).then succeed, fail
 
 
 

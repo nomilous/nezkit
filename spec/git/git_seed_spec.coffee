@@ -12,8 +12,12 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should, findit, fs) -
 
 
     deferral.notify.info = 
-        good: ->
-        bad: -> 
+        good: -> console.log 'info.good', arguments
+        bad: ->  console.log 'info.bad', arguments
+
+    deferral.notify.event = 
+        good: -> console.log 'event.good', arguments
+        bad: ->  console.log 'event.bad', arguments
 
     #
     # mock package plugin
@@ -82,7 +86,7 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should, findit, fs) -
         GitSeed.prototype.load = -> return inputRepoArray
 
         
-        it 'calls getStatus on the Package plugin for every repo in the seed file', (done) -> 
+        it 'calls status on the Package plugin for every repo in the seed file', (done) -> 
 
             actsOnRepoArray = [] 
 
@@ -94,15 +98,17 @@ require('nez').realize 'GitSeed', (GitSeed, test, context, should, findit, fs) -
 
                 Package: 
 
-                    getStatus: (repo, defer, callback) -> 
+                    status: (repo, defer, callback) -> 
 
                         actsOnRepoArray.push repo
                         callback null, {}
 
             }, deferral
 
-            seed.status -> 
-            
+            seed.status (error, result) -> 
+
+                console.log
+
                 actsOnRepoArray.should.eql inputRepoArray
                 test done
 
