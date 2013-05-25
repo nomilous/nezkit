@@ -148,7 +148,8 @@ class GitSeed
             throw "error loading control file: #{@control} #{error.toString()}"
 
 
-    status: (callback) -> GitSeed.action 'status', @Plugin.Package, @array, @superTask, callback
+    status: (callback) -> GitSeed.action 'status', {}, @Plugin.Package, @array, @superTask, callback
+    commit: (message, callback) -> GitSeed.action 'commit', {message: message}, @Plugin.Package, @array, @superTask, callback
     clone:  (callback) -> 
 
         #
@@ -161,17 +162,20 @@ class GitSeed
 
         sequence( [
 
-            => nodefn.call GitSeed.action, 'clone',   @Plugin.Package, @array, @superTask
-            => nodefn.call GitSeed.action, 'install', @Plugin.Package, @array, @superTask
+            => nodefn.call GitSeed.action, 'clone',   {}, @Plugin.Package, @array, @superTask
+            => nodefn.call GitSeed.action, 'install', {}, @Plugin.Package, @array, @superTask
 
         ] ).then( 
 
-            -> console.log 'RESULTS', arguments
-            -> console.log 'ERROR', arguments
+            (results) -> if callback then callback null, results 
+            (error)   -> if callback then callback error
 
         )
 
-    @action: (action, Repo, repoArray, superTask, callback) -> 
+    
+
+
+    @action: (action, args, Repo, repoArray, superTask, callback) -> 
 
         event = superTask.notify.event
         info  = superTask.notify.info
@@ -207,50 +211,8 @@ class GitSeed
             for repo in repoArray
 
                 targs.unshift repo
-                -> nodefn.call Repo[action], targs.pop(), superTask
+                -> nodefn.call Repo[action], targs.pop(), args, superTask
 
         ).then succeed, fail
-
-
-
-    #     cloneAll = []
-    #     targets  = []
-
-    #     for repo in @array
-
-    #         # targets.unshift repo
-    #         # cloneAll.push targets.pop().clone()
-    #         cloneAll.push -> 
-
-    #             console.log 'clone'
-    #             defer = w.defer()
-    #             targets.pop().clone defer
-    #             defer.promise
-
-    #     sequence( cloneAll ).then(
-
-    #         success = (result) => @install callback
-    #         failed = (reason) -> callback reason 
-
-    #     )
-
-    # install: (callback) -> 
-
-    #     installAll = []
-    #     targets    = []
-
-    #     for repo in @array
-
-    #         targets.unshift repo
-    #         installAll.push -> targets.pop().install()
-
-
-    #     sequence( installAll ).then(
-
-    #         success = (result) -> callback result
-    #         failed = (reason) -> callback reason 
-
-    #     )
-
 
 module.exports = GitSeed
