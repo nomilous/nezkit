@@ -142,9 +142,27 @@ class GitSeed
 
 
     status: (callback) -> GitSeed.action 'status', @Plugin.Package, @array, @superTask, callback
-    clone:  (callback) -> #@action 'clone',  callback
+    clone:  (callback) -> 
 
+        #
+        # clone run is followed by an install run with whichever package manager plugin 
+        # is provided. 
+        # 
+        # note that each repo in the seed file has a specified manager, this is currently
+        # ignored... the same manager (@Plugin.Package) is used for all
+        #
 
+        sequence( [
+
+            => nodefn.call GitSeed.action, 'clone', @Plugin.Package, @array, @superTask
+            => nodefn.call GitSeed.action, 'install', @Plugin.Package, @array, @superTask
+
+        ] ).then( 
+
+            -> console.log 'RESULTS', arguments
+            -> console.log 'ERROR', arguments
+
+        )
 
     @action: (action, Repo, repoArray, superTask, callback) -> 
 
