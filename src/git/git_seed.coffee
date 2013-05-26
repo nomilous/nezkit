@@ -16,8 +16,11 @@ nodefn     = require 'when/node/function'
 # 
 # * (perhaps?) add an ""authorized"".githubforks / feature/branches array to EACH repo 
 #              in the seedfile so that a cumulative HEAD can be automerged onto a test 
-#              server - to enable view into the overall progress across a distributed
+#              server - to enable a view into the overall progress across a distributed
 #              development effort.
+# 
+#              this will also be handy in catching merge conflicts early - when the team
+#              is most capable of resolving them expediently
 # 
 
 class GitSeed
