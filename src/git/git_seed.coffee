@@ -86,7 +86,7 @@ class GitSeed
             tree.save()
 
 
-    constructor: (@root, @Plugin, @superTask, array) -> 
+    constructor: (@superTask, @root, @Plugin, array) -> 
 
         if (
 
