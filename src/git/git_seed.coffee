@@ -186,7 +186,19 @@ class GitSeed
 
                 """
 
-                @array = json
+                @array = []
+
+                for repo in json
+
+                    @array.push 
+
+                        root:                repo.root
+                        workDir:             repo.path
+                        packageManager:      repo.manager
+                        'remote.origin.url': repo.origin
+                        'HEAD':              repo.branch
+                        'version':           repo.ref
+
                 @save()
 
             for properties in json
