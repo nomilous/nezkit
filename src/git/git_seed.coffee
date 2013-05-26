@@ -22,6 +22,12 @@ nodefn     = require 'when/node/function'
 #              this will also be handy in catching merge conflicts early - when the _team_
 #              is most capable of resolving them expediently
 # 
+# * (perhaps?) pre_checks ensures origin match between .git/config[remote.origin.url] 
+#              and .git-seed [{origin:''},]
+#   
+#              perhaps only display warning on mismatch - because there are valid reasons
+#              to operate an unusual .git/config[remote.origin.url] 
+# 
 
 class GitSeed
 
@@ -199,8 +205,13 @@ class GitSeed
 
         ).then(
 
-            -> console.log 'RESULT', arguments
-            -> console.log 'ERROR', arguments
+            (result)  -> 
+
+                console.log 'RESULT', arguments
+
+
+
+            (error)   -> if callback then callback error
 
         )
 
