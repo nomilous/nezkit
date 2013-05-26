@@ -1,7 +1,8 @@
-fs         = require 'fs'
-sequence   = require 'when/sequence'
-nodefn     = require 'when/node/function'
+fs           = require 'fs'
+sequence     = require 'when/sequence'
+nodefn       = require 'when/node/function'
 
+SEED_VERSION = 2
 #
 # **class** `GitSeed`
 # ===================
@@ -109,7 +110,7 @@ class GitSeed
 
             for repo in array
 
-                repo.ref = 'ROOT_REPO_REF' if repo.root
+                repo.version = 'ROOT_REPO_REF' if repo.root
 
             @array = array
 
@@ -123,7 +124,12 @@ class GitSeed
 
             fs.writeFileSync @control, 
 
-                JSON.stringify( @array, null, 2 )
+                JSON.stringify {
+
+                    version: SEED_VERSION
+                    repos:   @array
+
+                }, null, 2
 
             #
             # new seed file generated is elevated to an event (notice)
@@ -154,7 +160,34 @@ class GitSeed
 
             json = JSON.parse fs.readFileSync @control
 
+            console.log "JSON", json
+
             array = []
+
+            unless json.version
+
+                console.log """
+
+                    Old .git-seed file detected!
+
+                    updating to new format...
+
+
+                    IMPORTANT
+                    ---------
+
+                    before commiting the new .git-seed file consider that
+                    other members of your team may still be using an older
+                    git-seed version
+
+                    the first version cannot handle multiple formats
+
+                    it will blow up 
+
+                """
+
+                @array = json
+                @save()
 
             for properties in json
 
