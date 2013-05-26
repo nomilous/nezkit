@@ -160,11 +160,9 @@ class GitSeed
 
             json = JSON.parse fs.readFileSync @control
 
-            console.log "JSON", json
-
             array = []
 
-            unless json.version
+            if typeof json.version == 'undefined'
 
                 console.log """
 
@@ -172,25 +170,14 @@ class GitSeed
 
                     updating to new format...
 
-
-                    IMPORTANT
-                    ---------
-
-                    before commiting the new .git-seed file consider that
-                    other members of your team may still be using an older
-                    git-seed version
-
-                    the first version cannot handle multiple formats
-
-                    it will blow up 
-
                 """
 
                 @array = []
+                repos  = []
 
                 for repo in json
 
-                    @array.push 
+                    newFormat = 
 
                         root:                repo.root
                         workDir:             repo.path
@@ -199,9 +186,34 @@ class GitSeed
                         'HEAD':              repo.branch
                         'version':           repo.ref
 
+                    @array.push newFormat
+                    repos.push newFormat
+
+
                 @save()
 
-            for properties in json
+                console.log """
+
+                    IMPORTANT
+                    ---------
+
+                    before commiting the new .git-seed file consider that
+                    other members of your team may still be using an older
+                    git-seed version
+
+                    the first version cannot handle unexpected format
+
+                    IT WILL BLOW UP 
+
+                """
+
+            else 
+
+                repos = json.repos
+
+            @array = []
+
+            for properties in repos
 
                 array.push new Plugin.Package properties
 
