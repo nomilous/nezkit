@@ -216,8 +216,8 @@ class GitSeed
             throw "error loading control file: #{@control} #{error.toString()}"
 
 
-    status: (callback) -> GitSeed.action 'status', {}, @Plugin.Package, @array, @superTask, callback
-    commit: (message, callback) -> GitSeed.action 'commit', {message: message}, @Plugin.Package, @array, @superTask, callback
+    status: (callback) -> GitSeed.action @superTask, 'status', {}, @Plugin.Package, @array, callback
+    commit: (message, callback) -> GitSeed.action @superTask, 'commit', {message: message}, @Plugin.Package, @array, callback
     clone:  (callback) -> 
 
         #
@@ -230,8 +230,8 @@ class GitSeed
 
         sequence( [
 
-            => nodefn.call GitSeed.action, 'clone',   {}, @Plugin.Package, @array, @superTask
-            => nodefn.call GitSeed.action, 'install', {}, @Plugin.Package, @array, @superTask
+            => nodefn.call GitSeed.action, @superTask, 'clone', {}, @Plugin.Package, @array
+            => nodefn.call GitSeed.action, @superTask, 'install', {}, @Plugin.Package, @array
 
         ] ).then( 
 
@@ -250,7 +250,7 @@ class GitSeed
 
         nodefn.call( 
 
-            GitSeed.action, 'pull', {}, @Plugin.Package, targets, @superTask 
+            GitSeed.action, @superTask, 'pull', {}, @Plugin.Package, targets
 
         ).then(
 
@@ -303,7 +303,7 @@ class GitSeed
     
 
 
-    @action: (action, args, Repo, repoArray, superTask, callback) -> 
+    @action: (superTask, action, args, Repo, repoArray, callback) -> 
 
         event = superTask.notify.event
         info  = superTask.notify.info
