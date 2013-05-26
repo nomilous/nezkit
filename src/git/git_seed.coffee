@@ -14,12 +14,12 @@ nodefn     = require 'when/node/function'
 # Pending features
 # ----------------
 # 
-# * (perhaps?) add an ""authorized"".githubforks / feature/branches array to EACH repo 
+# * (perhaps?) add an _authorized_.githubforks / feature/branches array to EACH repo 
 #              in the seedfile so that a cumulative HEAD can be automerged onto a test 
 #              server - to enable a view into the overall progress across a distributed
 #              development effort.
 # 
-#              this will also be handy in catching merge conflicts early - when the team
+#              this will also be handy in catching merge conflicts early - when the _team_
 #              is most capable of resolving them expediently
 # 
 
