@@ -82,7 +82,7 @@ class GitSeed
 
         Plugin.Package.search root, Plugin, superTask, (error, packages) -> 
 
-            tree = new GitSeed root, Plugin, superTask, packages
+            tree = new GitSeed superTask, root, Plugin, packages
             tree.save()
 
 
