@@ -80,7 +80,7 @@ class GitSeed
         #   [notice](https://github.com/nomilous/notice)
         # 
 
-        Plugin.Package.search root, Plugin, superTask, (error, packages) -> 
+        Plugin.Package.search superTask, root, Plugin, (error, packages) -> 
 
             tree = new GitSeed superTask, root, Plugin, packages
             tree.save()
@@ -339,7 +339,7 @@ class GitSeed
             for repo in repoArray
 
                 targs.unshift repo
-                -> nodefn.call Repo[action], targs.pop(), args, superTask
+                -> nodefn.call Repo[action], superTask, targs.pop(), args
 
         ).then succeed, fail
 
