@@ -185,6 +185,61 @@ class GitSeed
 
         )
 
+    pull: (callback) -> 
+
+        #
+        # first pull only the root repo to get an updated .git-seed file
+        #
+
+        targets = [  @array[0]  ]
+
+        nodefn.call( 
+
+            GitSeed.action, 'pull', {}, @Plugin.Package, targets, @superTask 
+
+        ).then(
+
+            -> console.log 'RESULT', arguments
+            -> console.log 'ERROR', arguments
+
+        )
+
+
+
+     # seed = new GitSeed GitAction.root, GitAction.plugin
+
+        # seed.pull null, (error, result) -> 
+
+        #     #
+        #     # First call to pull with a null fetches only the root repo
+        #     # to get the latest .git-seed file
+        #     #
+
+        #     if error
+
+        #         console.log '(error) '.red + error.toString()
+        #         process.exit 9
+
+
+        #     #
+        #     # load the seed packages again (now with the latest .git-seed)
+        #     # and recall to pull all nested repos
+        #     # 
+
+        #     seed = new GitSeed GitAction.root, GitAction.plugin
+        #     seed.pull seed, (error, result) -> 
+
+        #         if error
+
+        #             console.log '(error) '.red + error.toString()
+        #             process.exit 10
+
+        #         process.exit 0
+
+        #
+        # then package manager install on all
+        #
+
     
 
 
