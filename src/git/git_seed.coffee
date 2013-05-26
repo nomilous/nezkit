@@ -34,22 +34,10 @@ class GitSeed
 
 
     #
-    # GitSeed.init(root, Plugin, superTask)
+    # GitSeed.init(superTask, root, Plugin)
     # -------------------------------------
     # 
     # Assembles the git-seed control file
-    # 
-    # ### root 
-    # 
-    # The directory containing the root repository.
-    # 
-    # 
-    # ### Plugin
-    # 
-    # Should define Plugin.Package as the definition of an implementation that extends the 
-    # baseclass [git-seed-core.GitRepo](https://github.com/nomilous/git-seed-core/blob/master/src/git_repo.coffee) 
-    # and overrides the [install class method](https://github.com/nomilous/git-seed-npm/blob/master/src/npm_package.coffee) to perform any
-    # post seed package manager activities (eg. npm install).
     # 
     # 
     # ### superTask
@@ -69,23 +57,27 @@ class GitSeed
     # * superTask.reject()  - superTask has failed permanently
     # * superTask.notify[] -  to send status updates into the superTask 
     # 
-    # #### Notes
+    # ### root 
     # 
-    # * superTask will not be resolved() or rejected() by git-seed, that is a
-    #   responsibility of whichever higher entity in the objective heirarchy
-    #   made the call to git-seed.
-    # * superTask.notify[] **must** be a configured instance of 
-    #   [notice](https://github.com/nomilous/notice)
+    # The directory containing the root repository.
     # 
+    # 
+    # ### Plugin
+    # 
+    # Should define Plugin.Package as the definition of an implementation that extends the 
+    # baseclass [git-seed-core.GitRepo](https://github.com/nomilous/git-seed-core/blob/master/src/git_repo.coffee) 
+    # and overrides the [install class method](https://github.com/nomilous/git-seed-npm/blob/master/src/npm_package.coffee) to perform any
+    # post seed package manager activities (eg. npm install).
     # 
 
-    @init: (root, Plugin, superTask) -> 
+    @init: (superTask, root, Plugin) -> 
 
-        #
-        # deferral as promise object
-        # should define deferral.resolve(), deferral.reject() and deferral.notify()
-        #
-        # deferral.notify() must be an instance of [notice]()
+        # 
+        # * superTask will not be resolved() or rejected() by git-seed, that is a
+        #   responsibility of whichever higher entity in the objective heirarchy
+        #   made the call to git-seed.
+        # * superTask.notify[] **must** be a configured instance of 
+        #   [notice](https://github.com/nomilous/notice)
         # 
 
         Plugin.Package.search root, Plugin, superTask, (error, packages) -> 
