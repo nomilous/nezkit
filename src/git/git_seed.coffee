@@ -92,9 +92,9 @@ class GitSeed
 
             typeof @superTask.resolve != 'function' or 
             typeof @superTask.reject != 'function' or
-            typeof @superTask.notify != 'function'
+            typeof @superTask.notify.info.normal != 'function'
 
-        ) then throw new Error "#{ @constructor.name } requires superTask as deferral"
+        ) then throw new Error "#{ @constructor.name } requires superTask"
 
         @control = "#{@root}/.git-seed"
 
