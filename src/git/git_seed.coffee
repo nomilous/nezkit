@@ -240,13 +240,19 @@ class GitSeed
 
         )
 
-    pull: (callback) -> 
+    pull: (first, callback) -> 
 
-        #
-        # first pull only the root repo to get an updated .git-seed file
-        #
+        if first
 
-        targets = [  @array[0]  ]
+            #
+            # first pull only the root repo to get an updated .git-seed file
+            #
+
+            targets = [  @array[0]  ]
+
+        else 
+
+            targets = @array[1..]
 
         nodefn.call( 
 
@@ -254,12 +260,7 @@ class GitSeed
 
         ).then(
 
-            (result)  -> 
-
-                console.log 'RESULT', arguments
-
-
-
+            (result)  -> if callback then callback null, result
             (error)   -> if callback then callback error
 
         )
