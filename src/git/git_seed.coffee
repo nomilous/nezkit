@@ -240,19 +240,9 @@ class GitSeed
 
         )
 
-    pull: (first, callback) -> 
+    pullRoot: (callback) -> 
 
-        if first
-
-            #
-            # first pull only the root repo to get an updated .git-seed file
-            #
-
-            targets = [  @array[0]  ]
-
-        else 
-
-            targets = @array[1..]
+        targets = [  @array[0]  ]
 
         nodefn.call( 
 
@@ -265,43 +255,22 @@ class GitSeed
 
         )
 
+    pull: (callback) -> 
 
+        targets = @array[1..]
+        @array
 
-     # seed = new GitSeed GitAction.root, GitAction.plugin
+        sequence( [
 
-        # seed.pull null, (error, result) -> 
+            => nodefn.call GitSeed.action, @superTask, 'pull', {}, @Plugin.Package, targets
+            => nodefn.call GitSeed.action, @superTask, 'install', {}, @Plugin.Package, @array
 
-        #     #
-        #     # First call to pull with a null fetches only the root repo
-        #     # to get the latest .git-seed file
-        #     #
+        ] ).then( 
 
-        #     if error
+            (results) -> if callback then callback null, results 
+            (error)   -> if callback then callback error
 
-        #         console.log '(error) '.red + error.toString()
-        #         process.exit 9
-
-
-        #     #
-        #     # load the seed packages again (now with the latest .git-seed)
-        #     # and recall to pull all nested repos
-        #     # 
-
-        #     seed = new GitSeed GitAction.root, GitAction.plugin
-        #     seed.pull seed, (error, result) -> 
-
-        #         if error
-
-        #             console.log '(error) '.red + error.toString()
-        #             process.exit 10
-
-        #         process.exit 0
-
-        #
-        # then package manager install on all
-        #
-
-    
+        )
 
 
     @action: (superTask, action, args, Repo, repoArray, callback) -> 
